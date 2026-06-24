@@ -12685,5 +12685,451 @@
   "—": 41,
   "8 - Idea": 102,
   "3 - Edit": 1
+ },
+ "linkedin_analytics": {
+  "Jan Řežáb": {
+   "period": "1. 1. 2026 – 24. 6. 2026",
+   "photo": "assets/rezab.jpeg",
+   "tagline": "Ekologický nadšenec | investor do obnovitelných zdrojů energie",
+   "content": {
+    "views": 224631,
+    "views_change_pct": -1,
+    "members_reached": 48710
+   },
+   "engagement": {
+    "total": 5249,
+    "reactions": 4805,
+    "comments": 387,
+    "reshares": 8,
+    "saves": 27,
+    "sends": 22,
+    "link_clicks": 1
+   },
+   "followers": {
+    "total": 8446,
+    "change_pct": 10
+   },
+   "demographics": {
+    "job_title": [
+     {
+      "label": "Výkonný ředitel",
+      "pct": 5
+     },
+     {
+      "label": "Zakladatel",
+      "pct": 4
+     },
+     {
+      "label": "Vlastník",
+      "pct": 3
+     },
+     {
+      "label": "Manažer projektu",
+      "pct": 3
+     },
+     {
+      "label": "Jednatel",
+      "pct": 3
+     },
+     {
+      "label": "Spoluzakladatel",
+      "pct": 2
+     },
+     {
+      "label": "Architekt",
+      "pct": 2
+     },
+     {
+      "label": "Člen představenstva",
+      "pct": 1
+     }
+    ],
+    "location": [
+     {
+      "label": "Praha – metro. oblast",
+      "pct": 59
+     },
+     {
+      "label": "Brno – metro. oblast",
+      "pct": 7
+     },
+     {
+      "label": "Ostrava – metro. oblast",
+      "pct": 2
+     },
+     {
+      "label": "Liberec a okolí",
+      "pct": 2
+     },
+     {
+      "label": "Olomouc a okolí",
+      "pct": 2
+     },
+     {
+      "label": "Hradec Králové a okolí",
+      "pct": 1
+     },
+     {
+      "label": "Plzeň – metro. oblast",
+      "pct": 1
+     },
+     {
+      "label": "Pardubice a okolí",
+      "pct": 1
+     },
+     {
+      "label": "Bratislava – metro. oblast",
+      "pct": 1
+     }
+    ],
+    "seniority": [
+     {
+      "label": "Služebně starší",
+      "pct": 28
+     },
+     {
+      "label": "Nováček",
+      "pct": 20
+     },
+     {
+      "label": "Ředitel",
+      "pct": 14
+     },
+     {
+      "label": "Ředitel (CEO, CFO, CTO)",
+      "pct": 9
+     },
+     {
+      "label": "Vlastník",
+      "pct": 8
+     },
+     {
+      "label": "Manažer",
+      "pct": 4
+     },
+     {
+      "label": "Partner",
+      "pct": 4
+     },
+     {
+      "label": "Viceprezident",
+      "pct": 3
+     }
+    ],
+    "industry": [
+     {
+      "label": "Reality",
+      "pct": 9
+     },
+     {
+      "label": "Stavebnictví",
+      "pct": 7
+     },
+     {
+      "label": "IT služby a poradenství",
+      "pct": 5
+     },
+     {
+      "label": "Obchodní poradenství",
+      "pct": 5
+     },
+     {
+      "label": "Architektura a plánování",
+      "pct": 4
+     },
+     {
+      "label": "Finanční služby",
+      "pct": 3
+     },
+     {
+      "label": "Reklamní služby",
+      "pct": 3
+     },
+     {
+      "label": "Stavební inženýrství",
+      "pct": 3
+     },
+     {
+      "label": "Bankovnictví",
+      "pct": 2
+     },
+     {
+      "label": "Marketingové služby",
+      "pct": 2
+     }
+    ],
+    "company_size": [
+     {
+      "label": "11–50 zaměstnanců",
+      "pct": 19
+     },
+     {
+      "label": "2–10 zaměstnanců",
+      "pct": 18
+     },
+     {
+      "label": "51–200 zaměstnanců",
+      "pct": 13
+     },
+     {
+      "label": "1 001–5 000 zaměst.",
+      "pct": 7
+     },
+     {
+      "label": "Více než 10 001 zaměst.",
+      "pct": 6
+     },
+     {
+      "label": "201–500 zaměstnanců",
+      "pct": 6
+     },
+     {
+      "label": "501–1 000 zaměstnanců",
+      "pct": 4
+     },
+     {
+      "label": "5 001–10 000 zaměst.",
+      "pct": 3
+     },
+     {
+      "label": "0–1 zaměstnanců",
+      "pct": 2
+     }
+    ]
+   }
+  },
+  "Jan Sadil": {
+   "period": "1. 1. 2026 – 24. 6. 2026",
+   "photo": "assets/sadil.jpeg",
+   "tagline": "CEO | JRD",
+   "content": {
+    "views": 264966,
+    "views_change_pct": 34,
+    "members_reached": 45068
+   },
+   "engagement": {
+    "total": 5494,
+    "reactions": 5087,
+    "comments": 370,
+    "reshares": 6,
+    "saves": 15,
+    "sends": 16,
+    "link_clicks": 14
+   },
+   "followers": {
+    "total": 4952,
+    "change_pct": 7
+   },
+   "top_posts": [
+    {
+     "text": "11,26 km 🏃 Vypnul jsem Garmin před naším domem na Nový rok…",
+     "views": 20194
+    },
+    {
+     "text": "JRD roste a pokud si někdo myslel, že jsme malí developer…",
+     "views": 16579
+    },
+    {
+     "text": "JRD roste a pokud si někdo myslel, že jsme malí developer, už to nějakou dobu úplně tak není 😊",
+     "views": 14930
+    },
+    {
+     "text": "Plán byl 30,5 hodiny, ambice pod 30 hodin, výsledek pár minut nad 30.",
+     "views": 13458
+    },
+    {
+     "text": "Mně jako pasivnímu golfistovi 🏌️ přijde, že se cyklistika 🚴 stává novým sportem pro (pohybující se) manažery.",
+     "views": 12747
+    }
+   ],
+   "demographics": {
+    "job_title": [
+     {
+      "label": "Výkonný ředitel",
+      "pct": 5
+     },
+     {
+      "label": "Zakladatel",
+      "pct": 4
+     },
+     {
+      "label": "Vlastník",
+      "pct": 2
+     },
+     {
+      "label": "Manažer projektu",
+      "pct": 2
+     },
+     {
+      "label": "Spoluzakladatel",
+      "pct": 2
+     },
+     {
+      "label": "Člen představenstva",
+      "pct": 2
+     },
+     {
+      "label": "Jednatel",
+      "pct": 2
+     },
+     {
+      "label": "Bankéř",
+      "pct": 1
+     }
+    ],
+    "location": [
+     {
+      "label": "Praha – metro. oblast",
+      "pct": 68
+     },
+     {
+      "label": "Brno – metro. oblast",
+      "pct": 4
+     },
+     {
+      "label": "Ostrava – metro. oblast",
+      "pct": 2
+     },
+     {
+      "label": "Hradec Králové a okolí",
+      "pct": 2
+     },
+     {
+      "label": "Olomouc a okolí",
+      "pct": 1
+     },
+     {
+      "label": "Pardubice a okolí",
+      "pct": 1
+     },
+     {
+      "label": "Bratislava – metro. oblast",
+      "pct": 1
+     },
+     {
+      "label": "Liberec a okolí",
+      "pct": 1
+     },
+     {
+      "label": "České Budějovice a okolí",
+      "pct": 1
+     }
+    ],
+    "seniority": [
+     {
+      "label": "Služebně starší",
+      "pct": 32
+     },
+     {
+      "label": "Ředitel",
+      "pct": 17
+     },
+     {
+      "label": "Nováček",
+      "pct": 14
+     },
+     {
+      "label": "Ředitel (CEO, CFO, CTO)",
+      "pct": 10
+     },
+     {
+      "label": "Vlastník",
+      "pct": 7
+     },
+     {
+      "label": "Manažer",
+      "pct": 6
+     },
+     {
+      "label": "Partner",
+      "pct": 5
+     },
+     {
+      "label": "Viceprezident",
+      "pct": 3
+     }
+    ],
+    "industry": [
+     {
+      "label": "Bankovnictví",
+      "pct": 16
+     },
+     {
+      "label": "Finanční služby",
+      "pct": 9
+     },
+     {
+      "label": "IT služby a poradenství",
+      "pct": 8
+     },
+     {
+      "label": "Reality",
+      "pct": 6
+     },
+     {
+      "label": "Obchodní poradenství",
+      "pct": 5
+     },
+     {
+      "label": "Reklamní služby",
+      "pct": 3
+     },
+     {
+      "label": "Stavebnictví",
+      "pct": 3
+     },
+     {
+      "label": "Pojištění",
+      "pct": 3
+     },
+     {
+      "label": "Správa lidských zdrojů",
+      "pct": 2
+     },
+     {
+      "label": "Marketingové služby",
+      "pct": 2
+     }
+    ],
+    "company_size": [
+     {
+      "label": "11–50 zaměstnanců",
+      "pct": 16
+     },
+     {
+      "label": "5 001–10 000 zaměst.",
+      "pct": 14
+     },
+     {
+      "label": "2–10 zaměstnanců",
+      "pct": 14
+     },
+     {
+      "label": "51–200 zaměstnanců",
+      "pct": 13
+     },
+     {
+      "label": "1 001–5 000 zaměst.",
+      "pct": 8
+     },
+     {
+      "label": "Více než 10 001 zaměst.",
+      "pct": 7
+     },
+     {
+      "label": "201–500 zaměstnanců",
+      "pct": 6
+     },
+     {
+      "label": "501–1 000 zaměstnanců",
+      "pct": 5
+     },
+     {
+      "label": "0–1 zaměstnanců",
+      "pct": 2
+     }
+    ]
+   }
+  }
  }
 }

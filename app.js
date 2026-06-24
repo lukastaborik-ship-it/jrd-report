@@ -17,6 +17,7 @@ const SECTIONS = [
   { id:'compare',  icon:'5', title:'Srovnání profilů',  sub:'Jan Řežáb vs Jan Sadil',                   person:false },
   { id:'top',      icon:'6', title:'TOP příspěvky',     sub:'Nejúspěšnější příspěvky podle dosahu',     person:false },
   { id:'pipeline', icon:'7', title:'Stav obsahu',       sub:'Publikováno vs. rozpracováno',             person:false },
+  { id:'profiles', icon:'8', title:'Profily ambasadorů', sub:'LinkedIn Analytics — data přímo z platformy', person:false },
 ];
 
 let DATA = null;
@@ -97,7 +98,7 @@ function render(){
   $('#personSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('is-active', b.dataset.person===state.person));
 
   ({ overview:renderOverview, reach:renderReach, timing:renderTiming,
-     network:renderNetwork, compare:renderCompare, top:renderTop, pipeline:renderPipeline })[sec.id]();
+     network:renderNetwork, compare:renderCompare, top:renderTop, pipeline:renderPipeline, profiles:renderProfiles })[sec.id]();
 }
 
 const kkey = () => `${state.year}|${state.person}`;
@@ -389,6 +390,242 @@ function renderPipeline(){
   $('#pipeTable').innerHTML = `<thead><tr><th>Stav</th><th class="num">Počet</th><th class="num">Podíl</th></tr></thead><tbody>`+
     entries.map((e,i)=>`<tr><td>${labels[i]}</td><td class="num">${fmt(e[1])}</td><td class="num">${Math.round(e[1]/total*100)} %</td></tr>`).join('')+
     `<tr style="font-weight:700"><td>Celkem</td><td class="num">${fmt(total)}</td><td class="num">100 %</td></tr></tbody>`;
+}
+
+// ---- 8. PROFILY AMBASADORŮ ----
+let profTab = 'Jan Řežáb';
+
+function renderProfiles(){
+  const persons = ['Jan Řežáb','Jan Sadil'];
+  $('#profTabs').innerHTML = persons.map(p=>`<button class="subtab${p===profTab?' is-active':''}" data-prof="${p}">${p}</button>`).join('');
+  $('#profTabs').querySelectorAll('.subtab').forEach(b=>b.onclick=()=>{ profTab=b.dataset.prof; renderProfiles(); });
+
+  const a = DATA.linkedin_analytics[profTab];
+  if(!a){ $('#profContent').innerHTML='<div class="note">Žádná data.</div>'; return; }
+
+  const color = profTab==='Jan Řežáb' ? C.teal : C.koromiko;
+  const colorRgb = profTab==='Jan Řežáb' ? '95,140,148' : '255,177,78';
+
+  // Follower series filtered to 2026
+  const netSeries = (DATA.network[profTab]?.LinkedIn?.series||[]).filter(p=>p.date>='2026-01-01');
+  const firstNet = netSeries.find(p=>p.foll!=null);
+  const lastNet = [...netSeries].reverse().find(p=>p.foll!=null);
+  const follGain = (firstNet && lastNet) ? lastNet.foll - firstNet.foll : 0;
+
+  // Monthly 2026 content data (only months with data)
+  const monthly2026raw = DATA.monthly[`2026|${profTab}`] || new Array(12).fill(0);
+  const monthlyLabels = MONTHS_SHORT.filter((_,i) => monthly2026raw[i] > 0);
+  const monthlyData   = monthly2026raw.filter(v => v > 0);
+
+  // Photo or initials
+  const photoHtml = a.photo
+    ? `<img src="${a.photo}" alt="${profTab}" class="prof-photo">`
+    : `<div class="prof-initials" style="background:${color}">${profTab.split(' ').map(w=>w[0]).join('')}</div>`;
+
+  const viewDelta = a.content.views_change_pct;
+  const viewSign  = viewDelta >= 0 ? '▲' : '▼';
+  const viewCls   = viewDelta >= 0 ? 'up' : 'down';
+
+  // Demographic horizontal bars
+  const demoBar = items => {
+    const maxP = Math.max(...items.map(x=>x.pct), 1);
+    return `<div class="demo-list">${items.map(item=>`
+      <div class="demo-row">
+        <div class="demo-row__top">
+          <span class="demo-row__label">${item.label}</span>
+          <span class="demo-row__pct">${item.pct} %</span>
+        </div>
+        <div class="demo-row__bar-wrap">
+          <div class="demo-row__bar" style="width:${Math.round(item.pct/maxP*100)}%;background:rgba(${colorRgb},0.75)"></div>
+        </div>
+      </div>`).join('')}</div>`;
+  };
+
+  const engRows = [
+    ['Reakce',              a.engagement.reactions],
+    ['Komentáře',           a.engagement.comments],
+    ['Přesdílení',          a.engagement.reshares],
+    ['Uložení',             a.engagement.saves],
+    ['Odeslání na LinkedIn',a.engagement.sends],
+    ['Kliknutí na odkaz',   a.engagement.link_clicks],
+  ];
+
+  const topPostsHtml = (a.top_posts?.length) ? `
+    <div class="card section-gap">
+      <div class="card__head">
+        <div class="card__title">Nejúspěšnější příspěvky</div>
+        <div class="card__hint">dle zobrazení · ${a.period}</div>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Příspěvek</th><th class="num">Zobrazení</th></tr></thead>
+        <tbody>${a.top_posts.map((p,i)=>`
+          <tr>
+            <td class="rank">${i+1}</td>
+            <td style="font-size:13px;color:var(--text-body)">${p.text}</td>
+            <td class="num">${fmt(p.views)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : '';
+
+  $('#profContent').innerHTML = `
+
+    <!-- Profilový header -->
+    <div class="card prof-header">
+      ${photoHtml}
+      <div class="prof-header__info">
+        <div class="prof-header__name">${profTab}</div>
+        <div class="prof-header__tagline">${a.tagline}</div>
+        <div class="prof-header__period">LinkedIn Analytics &middot; ${a.period}</div>
+      </div>
+      <div class="prof-header__stats">
+        <div class="prof-stat">
+          <div class="prof-stat__val">${fmt(a.content.views)}</div>
+          <div class="prof-stat__lbl">Zobrazení</div>
+          <div class="prof-stat__delta ${viewCls}">${viewSign} ${Math.abs(viewDelta)}&thinsp;%</div>
+        </div>
+        <div class="prof-stat">
+          <div class="prof-stat__val">${fmt(a.followers.total)}</div>
+          <div class="prof-stat__lbl">Sledující</div>
+          <div class="prof-stat__delta up">▲ ${a.followers.change_pct}&thinsp;%</div>
+        </div>
+        <div class="prof-stat">
+          <div class="prof-stat__val">${fmt(a.content.members_reached)}</div>
+          <div class="prof-stat__lbl">Oslovení</div>
+          <div class="prof-stat__delta neutral">členové</div>
+        </div>
+        <div class="prof-stat">
+          <div class="prof-stat__val">${fmt(a.engagement.total)}</div>
+          <div class="prof-stat__lbl">Interakcí</div>
+          <div class="prof-stat__delta neutral">celkem</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grafy růstu -->
+    <div class="grid grid--2 section-gap">
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Růst sledujících</div>
+          <div class="card__hint">2026 &middot; +${fmt(follGain)} nových</div>
+        </div>
+        <div class="chart-wrap"><canvas id="profFollowers"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Zobrazení obsahu po měsících</div>
+          <div class="card__hint">2026 &middot; zdroj: LinkedIn Analytics</div>
+        </div>
+        <div class="chart-wrap"><canvas id="profViews"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Zapojení + Pracovní tituly -->
+    <div class="grid grid--2 section-gap">
+      <div class="card">
+        <div class="card__head"><div class="card__title">Zapojení publika</div><div class="card__hint">detail aktivit za období</div></div>
+        <table class="tbl">
+          <thead><tr><th>Typ aktivity</th><th class="num">Počet</th></tr></thead>
+          <tbody>
+            ${engRows.map(r=>`<tr><td>${r[0]}</td><td class="num">${fmt(r[1])}</td></tr>`).join('')}
+            <tr style="font-weight:700;border-top:2px solid var(--border-default)">
+              <td>Celkem sociální</td><td class="num">${fmt(a.engagement.total)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card__head"><div class="card__title">Pracovní tituly sledujících</div><div class="card__hint">demografická data LinkedIn</div></div>
+        ${demoBar(a.demographics.job_title)}
+      </div>
+    </div>
+
+    <!-- Lokalita + Služební věk -->
+    <div class="grid grid--2 section-gap">
+      <div class="card">
+        <div class="card__head"><div class="card__title">Lokalita sledujících</div><div class="card__hint">top regiony</div></div>
+        ${demoBar(a.demographics.location)}
+      </div>
+      <div class="card">
+        <div class="card__head"><div class="card__title">Služební věk sledujících</div><div class="card__hint">seniorita publika</div></div>
+        ${demoBar(a.demographics.seniority)}
+      </div>
+    </div>
+
+    <!-- Obor + Velikost firmy -->
+    <div class="grid grid--2 section-gap">
+      <div class="card">
+        <div class="card__head"><div class="card__title">Obor sledujících</div><div class="card__hint">top sektory</div></div>
+        ${demoBar(a.demographics.industry)}
+      </div>
+      <div class="card">
+        <div class="card__head"><div class="card__title">Velikost firmy sledujících</div><div class="card__hint">struktura publika dle velikosti firmy</div></div>
+        ${demoBar(a.demographics.company_size)}
+      </div>
+    </div>
+
+    ${topPostsHtml}
+  `;
+
+  // Chart: follower growth (2026)
+  if(netSeries.length > 0){
+    const gradColor = `rgba(${colorRgb},0.15)`;
+    mkChart('profFollowers',{
+      type:'line',
+      data:{
+        labels: netSeries.map(p=>p.date),
+        datasets:[{
+          label:'Sledující',
+          data: netSeries.map(p=>p.foll),
+          borderColor: color,
+          backgroundColor: gradColor,
+          fill: true, tension:0.35, pointRadius:2, pointHoverRadius:5,
+          borderWidth:2.5
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{...tip, callbacks:{label:c=>fmt(c.parsed.y)+' sledujících'}}
+        },
+        scales:{
+          x:{ grid:{display:false}, ticks:{maxTicksLimit:7, font:{size:10}} },
+          y:{ grid:{color:C.grid}, border:{display:false}, ticks:{callback:v=>fmtK(v)} }
+        }
+      }
+    });
+  }
+
+  // Chart: monthly views 2026
+  if(monthlyData.length > 0){
+    mkChart('profViews',{
+      type:'bar',
+      data:{
+        labels: monthlyLabels,
+        datasets:[{
+          label:'Zobrazení',
+          data: monthlyData,
+          backgroundColor:`rgba(${colorRgb},0.8)`,
+          borderRadius:4
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{...tip, callbacks:{label:c=>fmt(c.parsed.y)+' zobrazení'}},
+          datalabels:{
+            display:true, anchor:'end', align:'end',
+            formatter: v => fmtK(v),
+            font:{family:"'Montserrat'",weight:'700',size:10},
+            color: C.ink
+          }
+        },
+        scales:baseScales()
+      }
+    });
+  }
 }
 
 init();
