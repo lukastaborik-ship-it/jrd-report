@@ -13131,5 +13131,40 @@
     ]
    }
   }
+ },
+ "social_media": {
+  "period": "1. 1. 2026 – 24. 6. 2026",
+  "posts_count": 31,
+  "platforms_note": "Příspěvky napříč Facebook a Instagram",
+  "follower_change_since_start": {
+   "Facebook": -144,
+   "Instagram": 258
+  },
+  "stats_2026": {
+   "views": 436170,
+   "reach": 122456,
+   "interactions": 1695
+  },
+  "top_posts": [
+   {
+    "file": "assets/some-top3-p1.png",
+    "views": 3300,
+    "reach": 1100,
+    "interactions": 64
+   },
+   {
+    "file": "assets/some-top3-p2.png",
+    "views": 2400,
+    "reach": 726,
+    "interactions": 42
+   },
+   {
+    "file": "assets/some-top3-p3.png",
+    "views": 1800,
+    "reach": 656,
+    "interactions": 23
+   }
+  ],
+  "ig_feed": "assets/igfeed.png"
  }
 }

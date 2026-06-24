@@ -238,9 +238,77 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 .demo-row__bar-wrap { height:7px; background:var(--ob-gray-100); border-radius:4px; }
 .demo-row__bar { height:7px; border-radius:4px; transition:width 0.4s var(--ease); }
 
+/* ---- Sociální sítě ---- */
+.soc-change-wrap {
+  display:flex; flex-direction:column; gap:20px; padding:8px 0;
+}
+.soc-change-item {
+  display:flex; align-items:center; gap:16px;
+}
+.soc-change-icon {
+  width:44px; height:44px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:20px; font-weight:900; letter-spacing:-1px;
+}
+.soc-change-name {
+  font-family:var(--font-heading); font-weight:var(--fw-semibold); font-size:var(--fs-sm);
+  color:var(--text-muted); text-transform:uppercase; letter-spacing:var(--ls-caps);
+}
+.soc-change-val {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.4rem;
+  line-height:1.1;
+}
+.soc-change-val.up   { color:var(--ob-teal-600); }
+.soc-change-val.down { color:var(--ob-tulip); }
+.soc-change-now {
+  font-size:12px; color:var(--text-faint); margin-top:2px;
+}
+.soc-stats-table { margin-top:8px; }
+
+/* TOP 3 příspěvky */
+.soc-top3 {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:4px;
+}
+.soc-post-card {
+  border:1px solid var(--border-default); border-radius:var(--radius-md);
+  overflow:hidden; display:flex; flex-direction:column; background:var(--ob-gray-50);
+  position:relative;
+}
+.soc-post-rank {
+  position:absolute; top:10px; left:10px;
+  background:var(--accent); color:#fff;
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:13px;
+  border-radius:6px; padding:2px 8px; line-height:1.6;
+}
+.soc-post-img {
+  width:100%; aspect-ratio:4/5; object-fit:cover; display:block;
+}
+.soc-post-stats {
+  display:flex; justify-content:space-around; padding:12px 8px; gap:4px;
+}
+.soc-post-stat {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+}
+.soc-post-stat__val {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.05rem;
+  color:var(--text-strong);
+}
+.soc-post-stat__lbl {
+  font-size:11px; color:var(--text-muted); text-align:center;
+}
+
+/* IG Feed */
+.soc-feed-wrap {
+  width:100%; overflow:hidden; border-radius:var(--radius-sm);
+}
+.soc-feed-img {
+  width:100%; max-height:620px; object-fit:contain; display:block;
+}
+
 @media (max-width:920px){
   .sidebar { display:none; }
   .content { padding:var(--space-5); }
   .prof-header { flex-direction:column; }
   .prof-header__stats { justify-content:center; }
+  .soc-top3 { grid-template-columns:1fr; }
 }

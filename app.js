@@ -18,6 +18,7 @@ const SECTIONS = [
   { id:'top',      icon:'6', title:'TOP příspěvky',     sub:'Nejúspěšnější příspěvky podle dosahu',     person:false },
   { id:'pipeline', icon:'7', title:'Stav obsahu',       sub:'Publikováno vs. rozpracováno',             person:false },
   { id:'profiles', icon:'8', title:'Profily ambasadorů', sub:'LinkedIn Analytics — data přímo z platformy', person:false },
+  { id:'social',   icon:'9', title:'Sociální sítě',      sub:'Facebook & Instagram — statistiky 2026',       person:false },
 ];
 
 let DATA = null;
@@ -98,7 +99,8 @@ function render(){
   $('#personSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('is-active', b.dataset.person===state.person));
 
   ({ overview:renderOverview, reach:renderReach, timing:renderTiming,
-     network:renderNetwork, compare:renderCompare, top:renderTop, pipeline:renderPipeline, profiles:renderProfiles })[sec.id]();
+     network:renderNetwork, compare:renderCompare, top:renderTop, pipeline:renderPipeline,
+     profiles:renderProfiles, social:renderSocial })[sec.id]();
 }
 
 const kkey = () => `${state.year}|${state.person}`;
@@ -626,6 +628,185 @@ function renderProfiles(){
       }
     });
   }
+}
+
+// ---- 9. SOCIÁLNÍ SÍTĚ (FB + IG) ----
+function renderSocial(){
+  const sm = DATA.social_media;
+  if(!sm){ $('#socialContent').innerHTML='<div class="note">Žádná data.</div>'; return; }
+
+  const C_FB = '#1877F2';
+  const C_IG = '#E1306C';
+  const C_FB_rgb = '24,119,242';
+  const C_IG_rgb = '225,48,108';
+
+  // --- Follower series ---
+  const fbSeries = DATA.network.JRD.Facebook.series || [];
+  const igSeries = DATA.network.JRD.Instagram.series || [];
+  const allDates = [...new Set([...fbSeries.map(p=>p.date), ...igSeries.map(p=>p.date)])].sort();
+  const fbByDate = Object.fromEntries(fbSeries.map(p=>[p.date, p.foll]));
+  const igByDate = Object.fromEntries(igSeries.map(p=>[p.date, p.foll]));
+
+  const fbChange = sm.follower_change_since_start.Facebook;
+  const igChange = sm.follower_change_since_start.Instagram;
+  const fbSign  = fbChange >= 0 ? '▲' : '▼';
+  const igSign  = igChange >= 0 ? '▲' : '▼';
+  const fbCls   = fbChange >= 0 ? 'up' : 'down';
+  const igCls   = igChange >= 0 ? 'up' : 'down';
+
+  $('#socialContent').innerHTML = `
+
+    <!-- KPI řada -->
+    <div class="grid grid--kpi">
+      <div class="kpi-card">
+        <div class="kpi__val">${sm.posts_count}</div>
+        <div class="kpi__lbl">Příspěvků v roce 2026</div>
+        <div class="kpi__sub">napříč FB &amp; IG</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi__val">${fmtMln(sm.stats_2026.views)}</div>
+        <div class="kpi__lbl">Zobrazení</div>
+        <div class="kpi__sub">celkem 2026</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi__val">${fmtK(sm.stats_2026.reach)}</div>
+        <div class="kpi__lbl">Dosah</div>
+        <div class="kpi__sub">unikátní účty</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi__val">${fmt(sm.stats_2026.interactions)}</div>
+        <div class="kpi__lbl">Interakcí</div>
+        <div class="kpi__sub">celkem 2026</div>
+      </div>
+    </div>
+
+    <!-- Graf sledujících + souhrn změn -->
+    <div class="grid grid--2 section-gap">
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Vývoj sledujících</div>
+          <div class="card__hint">od začátku spolupráce</div>
+        </div>
+        <div class="chart-wrap"><canvas id="socFollowers"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Celková změna sledujících</div>
+          <div class="card__hint">od začátku spolupráce</div>
+        </div>
+        <div class="soc-change-wrap">
+          <div class="soc-change-item">
+            <div class="soc-change-icon" style="background:${C_FB}">f</div>
+            <div>
+              <div class="soc-change-name">Facebook</div>
+              <div class="soc-change-val ${fbCls}">${fbSign} ${Math.abs(fbChange)} sledujících</div>
+              <div class="soc-change-now">${fmt(fbSeries[fbSeries.length-1]?.foll)} aktuálně</div>
+            </div>
+          </div>
+          <div class="soc-change-item">
+            <div class="soc-change-icon" style="background:${C_IG}">▶</div>
+            <div>
+              <div class="soc-change-name">Instagram</div>
+              <div class="soc-change-val ${igCls}">${igSign} ${Math.abs(igChange)} sledujících</div>
+              <div class="soc-change-now">${fmt(igSeries[igSeries.length-1]?.foll)} aktuálně</div>
+            </div>
+          </div>
+          <div class="soc-stats-table">
+            <table class="tbl">
+              <thead><tr><th>Platforma</th><th class="num">Zobrazení</th><th class="num">Dosah</th><th class="num">Interakce</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span style="color:${C_FB};font-weight:700">Facebook &amp; Instagram</span></td>
+                  <td class="num">${fmt(sm.stats_2026.views)}</td>
+                  <td class="num">${fmt(sm.stats_2026.reach)}</td>
+                  <td class="num">${fmt(sm.stats_2026.interactions)}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px">${sm.posts_count} příspěvků · ${sm.period}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP 3 příspěvky -->
+    <div class="card section-gap">
+      <div class="card__head">
+        <div class="card__title">TOP 3 příspěvky</div>
+        <div class="card__hint">podle zobrazení · ${sm.period}</div>
+      </div>
+      <div class="soc-top3">
+        ${sm.top_posts.map((p,i)=>`
+          <div class="soc-post-card">
+            <div class="soc-post-rank">#${i+1}</div>
+            <img src="${p.file}" alt="Top ${i+1} příspěvek" class="soc-post-img" loading="lazy">
+            <div class="soc-post-stats">
+              <div class="soc-post-stat"><span class="soc-post-stat__val">${fmtK(p.views)}</span><span class="soc-post-stat__lbl">zobrazení</span></div>
+              <div class="soc-post-stat"><span class="soc-post-stat__val">${fmt(p.reach)}</span><span class="soc-post-stat__lbl">dosah</span></div>
+              <div class="soc-post-stat"><span class="soc-post-stat__val">${p.interactions}</span><span class="soc-post-stat__lbl">interakcí</span></div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- IG Feed -->
+    <div class="card section-gap">
+      <div class="card__head">
+        <div class="card__title">Současný Instagram feed</div>
+        <div class="card__hint">vizuální přehled profilu</div>
+      </div>
+      <div class="soc-feed-wrap">
+        <img src="${sm.ig_feed}" alt="Instagram feed" class="soc-feed-img" loading="lazy">
+      </div>
+    </div>`;
+
+  // --- Chart: follower growth ---
+  mkChart('socFollowers', {
+    type:'line',
+    data:{
+      labels: allDates.map(d => {
+        const [y,m,day] = d.split('-');
+        return `${+day}.${+m}.${y.slice(2)}`;
+      }),
+      datasets:[
+        {
+          label:'Facebook',
+          data: allDates.map(d => fbByDate[d] ?? null),
+          borderColor: C_FB, backgroundColor: `rgba(${C_FB_rgb},0.08)`,
+          fill:true, tension:0.3, pointRadius:0, borderWidth:2, spanGaps:true
+        },
+        {
+          label:'Instagram',
+          data: allDates.map(d => igByDate[d] ?? null),
+          borderColor: C_IG, backgroundColor: `rgba(${C_IG_rgb},0.08)`,
+          fill:true, tension:0.3, pointRadius:0, borderWidth:2, spanGaps:true
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{
+        legend:{display:true},
+        tooltip:{...tip, callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}},
+        datalabels:{display:false}
+      },
+      scales:{
+        x:{
+          grid:{display:false},
+          ticks:{
+            font:{size:10},
+            maxTicksLimit:12,
+            maxRotation:0
+          }
+        },
+        y:{
+          grid:{color:C.grid}, border:{display:false},
+          ticks:{font:{size:11}, callback:v=>fmtK(v)}
+        }
+      }
+    }
+  });
 }
 
 init();
