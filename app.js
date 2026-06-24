@@ -653,6 +653,9 @@ function renderAmbs(){
   const rSeries = (DATA.network['Jan Řežáb']?.LinkedIn?.series||[]).filter(p=>p.date>='2026-01-01');
   const sSeries = (DATA.network['Jan Sadil']?.LinkedIn?.series||[]).filter(p=>p.date>='2026-01-01');
 
+  const rPosts = DATA.kpis['2026|Jan Řežáb']?.posts ?? '—';
+  const sPosts = DATA.kpis['2026|Jan Sadil']?.posts ?? '—';
+
   const rViews = DATA.monthly['2026|Jan Řežáb'] || new Array(12).fill(0);
   const sViews = DATA.monthly['2026|Jan Sadil'] || new Array(12).fill(0);
   const rVLabels = MONTHS_SHORT.filter((_,i)=>rViews[i]>0);
@@ -680,6 +683,7 @@ function renderAmbs(){
         </div>
         <div class="ambs-kpis">
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(rezab.followers.total)}</div><div class="ambs-kpi__lbl">Sledující</div><div class="ambs-kpi__d up">▲ ${rezab.followers.change_pct} %</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${rPosts}</div><div class="ambs-kpi__lbl">Příspěvků</div><div class="ambs-kpi__d" style="color:var(--text-faint)">v roce 2026</div></div>
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmtK(rezab.content.views)}</div><div class="ambs-kpi__lbl">Zobrazení</div></div>
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(rezab.engagement.total)}</div><div class="ambs-kpi__lbl">Interakcí</div></div>
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(rezab.content.members_reached)}</div><div class="ambs-kpi__lbl">Oslovení</div></div>
@@ -695,6 +699,7 @@ function renderAmbs(){
         </div>
         <div class="ambs-kpis">
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(sadil.followers.total)}</div><div class="ambs-kpi__lbl">Sledující</div><div class="ambs-kpi__d up">▲ ${sadil.followers.change_pct} %</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${sPosts}</div><div class="ambs-kpi__lbl">Příspěvků</div><div class="ambs-kpi__d" style="color:var(--text-faint)">v roce 2026</div></div>
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmtK(sadil.content.views)}</div><div class="ambs-kpi__lbl">Zobrazení</div></div>
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(sadil.engagement.total)}</div><div class="ambs-kpi__lbl">Interakcí</div></div>
           <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(sadil.content.members_reached)}</div><div class="ambs-kpi__lbl">Oslovení</div></div>
@@ -754,6 +759,7 @@ function renderAmbs(){
           </tr>
         </thead>
         <tbody>
+          <tr><td>Příspěvků v roce 2026</td><td class="num">${rPosts}</td><td class="num">${sPosts}</td><td class="num">${diffCell(sPosts,rPosts)}</td></tr>
           <tr><td>Sledující celkem</td><td class="num">${fmt(rezab.followers.total)}</td><td class="num">${fmt(sadil.followers.total)}</td><td class="num">${diffCell(rezab.followers.total,sadil.followers.total)}</td></tr>
           <tr><td>Růst sledujících</td><td class="num">▲ ${rezab.followers.change_pct} %</td><td class="num">▲ ${sadil.followers.change_pct} %</td><td class="num">${rezab.followers.change_pct>sadil.followers.change_pct?'<span class="up">▲ Řežáb</span>':'<span class="up">▲ Sadil</span>'}</td></tr>
           <tr><td>Zobrazení obsahu</td><td class="num">${fmt(rezab.content.views)}</td><td class="num">${fmt(sadil.content.views)}</td><td class="num">${diffCell(rezab.content.views,sadil.content.views)}</td></tr>
