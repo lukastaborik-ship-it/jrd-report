@@ -118,17 +118,28 @@ function renderOverview(){
     const arrow = d>=0?'▲':'▼';
     return `<span class="kpi__delta ${cls}">${arrow} ${Math.abs(d)} %</span><span>vs ${DATA.meta.years[DATA.meta.years.indexOf(Number(state.year))-1]}</span>`;
   };
-  // síť LinkedIn — sledující celkem k dnešku
-  let follNow=0, follGain=0;
-  for(const p of ['Jan Řežáb','Jan Sadil','JRD']){
-    const s = DATA.network[p]?.LinkedIn?.summary; if(s){ follNow+=s.foll_now||0; follGain+=s.foll_gain||0; }
-  }
+  // síť LinkedIn — sledující ke konci zvoleného roku (síť roste v čase)
+  const netUpTo = (person) => {
+    const series = DATA.network[person]?.LinkedIn?.series;
+    if(!series || !series.length) return null;
+    const first = series.find(p=>p.foll!=null) || series[0];
+    const filt = (state.year==='all') ? series : series.filter(p=>yearOf(p.date)<=Number(state.year));
+    const last = [...(filt.length?filt:series.slice(0,1))].reverse().find(p=>p.foll!=null) || first;
+    return { start:first.foll, foll:last.foll, date:last.date };
+  };
+  const netPersons = (state.person==='all') ? ['Jan Řežáb','Jan Sadil','JRD'] : [state.person];
+  let follNow=0, follGain=0, lastDate='';
+  for(const p of netPersons){ const v=netUpTo(p); if(v){ follNow+=v.foll; follGain+=(v.foll-v.start); if(v.date>lastDate) lastDate=v.date; } }
+  const follLabel = state.year==='all'
+    ? `Sledující na LinkedIn (k ${lastDate?fmtDate(lastDate):'dnešku'})`
+    : `Sledující na LinkedIn (k ${lastDate?fmtDate(lastDate):'konci '+state.year})`;
+
   const tiles = [
     { dark:true, label:'Celkový dosah', value:fmt(k.reach), sub:delta(k.reach, pk&&pk.reach) || 'zobrazení příspěvků' },
     { label:'Publikované příspěvky', value:fmt(k.posts), sub:delta(k.posts, pk&&pk.posts) || 'za období' },
     { label:'Průměrný dosah / příspěvek', value:fmt(k.avg), sub:delta(k.avg, pk&&pk.avg) || 'zobrazení' },
     { label:'Míra zapojení', value:(k.engagement||0).toLocaleString('cs-CZ')+' %', sub:'lajky + komentáře / dosah' },
-    { label:'Sledující na LinkedIn (k dnešku)', value:fmt(follNow), sub:`<span class="kpi__delta up">▲ +${fmt(follGain)}</span><span>od začátku</span>` },
+    { label:follLabel, value:fmt(follNow), sub:`<span class="kpi__delta up">▲ +${fmt(follGain)}</span><span>od začátku</span>` },
   ];
   $('#kpiGrid').innerHTML = tiles.map(t=>`
     <div class="kpi${t.dark?' kpi--dark':''}">
