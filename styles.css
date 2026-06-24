@@ -305,6 +305,53 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
   width:100%; max-height:620px; object-fit:contain; display:block;
 }
 
+/* Platform cards (příspěvky po platformách) */
+.soc-platforms-row {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;
+}
+.soc-platform-card {
+  background:var(--surface-card); border:1px solid var(--border-default);
+  border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column;
+  align-items:center; gap:8px; text-align:center;
+}
+.soc-platform-icon {
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:16px; font-weight:900; letter-spacing:-1px;
+}
+.soc-platform-name {
+  font-family:var(--font-heading); font-weight:var(--fw-semibold); font-size:var(--fs-sm);
+  color:var(--text-muted); text-transform:uppercase; letter-spacing:var(--ls-caps);
+}
+.soc-platform-posts {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:2.2rem;
+  color:var(--text-strong); line-height:1;
+}
+.soc-platform-lbl { font-size:12px; color:var(--text-faint); }
+
+/* Organika vs. reklamy split bar */
+.soc-platform-stats {
+  display:flex; gap:12px; margin-bottom:14px;
+}
+.soc-pstat {
+  flex:1; display:flex; flex-direction:column; gap:2px;
+  border:1px solid var(--border-default); border-radius:var(--radius-sm); padding:10px;
+}
+.soc-pstat__val {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.2rem;
+  color:var(--text-strong);
+}
+.soc-pstat__lbl { font-size:11px; color:var(--text-muted); }
+.soc-split-bar {
+  display:flex; height:12px; border-radius:6px; overflow:hidden; margin-bottom:6px;
+}
+.soc-split-bar > div { transition:width 0.5s var(--ease); }
+.soc-split-legend {
+  display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--text-muted);
+}
+.soc-split-legend span { display:flex; align-items:center; gap:5px; }
+.soc-dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0; }
+
 /* ---- Top posts s obrázky ---- */
 .top-posts-grid {
   display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:4px;
