@@ -12896,7 +12896,34 @@
       "pct": 2
      }
     ]
-   }
+   },
+   "top_posts": [
+    {
+     "file": "assets/rezab-post-1.png",
+     "text": "Mám dva SUV. Před pár dny jsem jel přes celou republiku na elektromobil…",
+     "views": 31089
+    },
+    {
+     "file": "assets/rezab-post-2.png",
+     "text": "Komentář k návrhu na odvolání Tomáše Okamury — a co si myslím o stavu české justice…",
+     "views": 31109
+    },
+    {
+     "file": "assets/rezab-post-3.png",
+     "text": "Samo páni bossů je správný věc. Tady to bylo i s fotem správní rady JRD…",
+     "views": 9692
+    },
+    {
+     "file": "assets/rezab-post-4.png",
+     "text": "Triathlon, lyžování a sport — jak to dělám, abych jako CEO byl v kondici…",
+     "views": 9470
+    },
+    {
+     "file": "assets/rezab-post-5.png",
+     "text": "Investice do nemovitostí a rozvoj JRD — pohled na náš projekt…",
+     "views": 9100
+    }
+   ]
   },
   "Jan Sadil": {
    "period": "1. 1. 2026 – 24. 6. 2026",

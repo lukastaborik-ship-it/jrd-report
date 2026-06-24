@@ -305,10 +305,67 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
   width:100%; max-height:620px; object-fit:contain; display:block;
 }
 
+/* ---- Top posts s obrázky ---- */
+.top-posts-grid {
+  display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:4px;
+}
+.top-post-card {
+  display:flex; flex-direction:column; border:1px solid var(--border-default);
+  border-radius:var(--radius-md); overflow:hidden; position:relative;
+  background:var(--ob-gray-50);
+}
+.top-post-rank {
+  position:absolute; top:8px; left:8px;
+  background:var(--accent); color:#fff;
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:12px;
+  border-radius:4px; padding:1px 7px; line-height:1.7; z-index:1;
+}
+.top-post-img {
+  width:100%; display:block; object-fit:cover;
+}
+.top-post-body { padding:8px 10px 10px; }
+.top-post-text {
+  font-size:11px; color:var(--text-muted); line-height:1.45; margin-bottom:6px;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+.top-post-views {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:13px;
+  color:var(--text-strong);
+}
+.top-post-views span { font-size:11px; font-weight:400; color:var(--text-muted); }
+
+/* ---- Komparace ambasadorů ---- */
+.ambs-card { }
+.ambs-prof-row { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+.ambs-name { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:var(--fs-h3); }
+.ambs-tag { font-size:var(--fs-sm); color:var(--text-muted); margin-top:2px; }
+.ambs-kpis { display:flex; gap:24px; flex-wrap:wrap; }
+.ambs-kpi { display:flex; flex-direction:column; gap:3px; }
+.ambs-kpi__val {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.6rem;
+  line-height:1; color:var(--text-strong);
+}
+.ambs-kpi__lbl {
+  font-size:11px; text-transform:uppercase; letter-spacing:var(--ls-caps); color:var(--text-muted);
+}
+.ambs-kpi__d { font-size:var(--fs-sm); font-weight:var(--fw-semibold); }
+.ambs-label-row {
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--space-6);
+  padding:0 2px; margin-bottom:-12px;
+}
+.ambs-section-label {
+  font-family:var(--font-heading); font-weight:var(--fw-bold);
+  font-size:var(--fs-sm); text-transform:uppercase; letter-spacing:var(--ls-caps);
+}
+.tbl .up   { color:var(--ob-teal-600); font-weight:var(--fw-semibold); }
+.tbl .down { color:var(--ob-tulip);    font-weight:var(--fw-semibold); }
+
 @media (max-width:920px){
   .sidebar { display:none; }
   .content { padding:var(--space-5); }
   .prof-header { flex-direction:column; }
   .prof-header__stats { justify-content:center; }
   .soc-top3 { grid-template-columns:1fr; }
+  .top-posts-grid { grid-template-columns:repeat(2,1fr); }
+  .ambs-label-row { grid-template-columns:1fr; }
 }

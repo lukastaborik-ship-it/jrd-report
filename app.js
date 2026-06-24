@@ -19,6 +19,7 @@ const SECTIONS = [
   { id:'pipeline', icon:'7', title:'Stav obsahu',       sub:'Publikováno vs. rozpracováno',             person:false },
   { id:'profiles', icon:'8', title:'Profily ambasadorů', sub:'LinkedIn Analytics — data přímo z platformy', person:false },
   { id:'social',   icon:'9', title:'Sociální sítě',      sub:'Facebook & Instagram — statistiky 2026',       person:false },
+  { id:'ambs',     icon:'↔', title:'Komparace LinkedIn',  sub:'Jan Řežáb vs Jan Sadil — grafy vedle sebe',   person:false },
 ];
 
 let DATA = null;
@@ -100,7 +101,7 @@ function render(){
 
   ({ overview:renderOverview, reach:renderReach, timing:renderTiming,
      network:renderNetwork, compare:renderCompare, top:renderTop, pipeline:renderPipeline,
-     profiles:renderProfiles, social:renderSocial })[sec.id]();
+     profiles:renderProfiles, social:renderSocial, ambs:renderAmbs })[sec.id]();
 }
 
 const kkey = () => `${state.year}|${state.person}`;
@@ -452,12 +453,25 @@ function renderProfiles(){
     ['Kliknutí na odkaz',   a.engagement.link_clicks],
   ];
 
+  const hasImages = a.top_posts?.some(p => p.file);
   const topPostsHtml = (a.top_posts?.length) ? `
     <div class="card section-gap">
       <div class="card__head">
         <div class="card__title">Nejúspěšnější příspěvky</div>
         <div class="card__hint">dle zobrazení · ${a.period}</div>
       </div>
+      ${hasImages ? `
+      <div class="top-posts-grid">
+        ${a.top_posts.map((p,i)=>`
+          <div class="top-post-card">
+            <div class="top-post-rank">#${i+1}</div>
+            <img src="${p.file}" alt="Příspěvek ${i+1}" class="top-post-img" loading="lazy">
+            <div class="top-post-body">
+              <div class="top-post-text">${p.text}</div>
+              <div class="top-post-views">${fmt(p.views)} <span>zobrazení</span></div>
+            </div>
+          </div>`).join('')}
+      </div>` : `
       <table class="tbl">
         <thead><tr><th>#</th><th>Příspěvek</th><th class="num">Zobrazení</th></tr></thead>
         <tbody>${a.top_posts.map((p,i)=>`
@@ -467,7 +481,7 @@ function renderProfiles(){
             <td class="num">${fmt(p.views)}</td>
           </tr>`).join('')}
         </tbody>
-      </table>
+      </table>`}
     </div>` : '';
 
   $('#profContent').innerHTML = `
@@ -628,6 +642,175 @@ function renderProfiles(){
       }
     });
   }
+}
+
+// ---- 10. KOMPARACE AMBASADORŮ ----
+function renderAmbs(){
+  const rezab = DATA.linkedin_analytics['Jan Řežáb'];
+  const sadil = DATA.linkedin_analytics['Jan Sadil'];
+
+  const rSeries = (DATA.network['Jan Řežáb']?.LinkedIn?.series||[]).filter(p=>p.date>='2026-01-01');
+  const sSeries = (DATA.network['Jan Sadil']?.LinkedIn?.series||[]).filter(p=>p.date>='2026-01-01');
+
+  const rViews = DATA.monthly['2026|Jan Řežáb'] || new Array(12).fill(0);
+  const sViews = DATA.monthly['2026|Jan Sadil'] || new Array(12).fill(0);
+  const rVLabels = MONTHS_SHORT.filter((_,i)=>rViews[i]>0);
+  const rVData   = rViews.filter(v=>v>0);
+  const sVLabels = MONTHS_SHORT.filter((_,i)=>sViews[i]>0);
+  const sVData   = sViews.filter(v=>v>0);
+
+  const follLabel = s => { const [,m,d]=s.date.split('-'); return `${+d}.${+m}.`; };
+
+  const diffCell = (a,b) => {
+    const d = a - b;
+    return `<span class="${d>0?'up':'down'}">${d>0?'▲':'▼'} ${fmt(Math.abs(d))}</span>`;
+  };
+
+  $('#ambsContent').innerHTML = `
+    <!-- Profil karty -->
+    <div class="grid grid--2">
+      <div class="card ambs-card" style="border-top:4px solid ${C.teal}">
+        <div class="ambs-prof-row">
+          <img src="${rezab.photo}" class="prof-photo" alt="Jan Řežáb">
+          <div>
+            <div class="ambs-name">Jan Řežáb</div>
+            <div class="ambs-tag">${rezab.tagline}</div>
+          </div>
+        </div>
+        <div class="ambs-kpis">
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(rezab.followers.total)}</div><div class="ambs-kpi__lbl">Sledující</div><div class="ambs-kpi__d up">▲ ${rezab.followers.change_pct} %</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmtK(rezab.content.views)}</div><div class="ambs-kpi__lbl">Zobrazení</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(rezab.engagement.total)}</div><div class="ambs-kpi__lbl">Interakcí</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(rezab.content.members_reached)}</div><div class="ambs-kpi__lbl">Oslovení</div></div>
+        </div>
+      </div>
+      <div class="card ambs-card" style="border-top:4px solid ${C.koromiko}">
+        <div class="ambs-prof-row">
+          <img src="${sadil.photo}" class="prof-photo" alt="Jan Sadil">
+          <div>
+            <div class="ambs-name">Jan Sadil</div>
+            <div class="ambs-tag">${sadil.tagline}</div>
+          </div>
+        </div>
+        <div class="ambs-kpis">
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(sadil.followers.total)}</div><div class="ambs-kpi__lbl">Sledující</div><div class="ambs-kpi__d up">▲ ${sadil.followers.change_pct} %</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmtK(sadil.content.views)}</div><div class="ambs-kpi__lbl">Zobrazení</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(sadil.engagement.total)}</div><div class="ambs-kpi__lbl">Interakcí</div></div>
+          <div class="ambs-kpi"><div class="ambs-kpi__val">${fmt(sadil.content.members_reached)}</div><div class="ambs-kpi__lbl">Oslovení</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sledující vedle sebe -->
+    <div class="ambs-label-row section-gap">
+      <div class="ambs-section-label" style="color:${C.teal}">Růst sledujících — Jan Řežáb</div>
+      <div class="ambs-section-label" style="color:${C.koromiko}">Růst sledujících — Jan Sadil</div>
+    </div>
+    <div class="grid grid--2">
+      <div class="card">
+        <div class="card__head"><div class="card__hint">${fmt(rSeries[0]?.foll)} → ${fmt(rSeries[rSeries.length-1]?.foll)} sledujících · 2026</div></div>
+        <div class="chart-wrap"><canvas id="ambsFollR"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card__head"><div class="card__hint">${fmt(sSeries[0]?.foll)} → ${fmt(sSeries[sSeries.length-1]?.foll)} sledujících · 2026</div></div>
+        <div class="chart-wrap"><canvas id="ambsFollS"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Zobrazení vedle sebe -->
+    <div class="ambs-label-row section-gap">
+      <div class="ambs-section-label" style="color:${C.teal}">Zobrazení po měsících — Jan Řežáb</div>
+      <div class="ambs-section-label" style="color:${C.koromiko}">Zobrazení po měsících — Jan Sadil</div>
+    </div>
+    <div class="grid grid--2">
+      <div class="card">
+        <div class="card__head"><div class="card__hint">2026 · LinkedIn Analytics</div></div>
+        <div class="chart-wrap"><canvas id="ambsViewsR"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card__head"><div class="card__hint">2026 · LinkedIn Analytics</div></div>
+        <div class="chart-wrap"><canvas id="ambsViewsS"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Srovnávací tabulka -->
+    <div class="card section-gap">
+      <div class="card__head">
+        <div class="card__title">Klíčové ukazatele vedle sebe</div>
+        <div class="card__hint">${rezab.period}</div>
+      </div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Ukazatel</th>
+            <th class="num" style="color:${C.teal}">Jan Řežáb</th>
+            <th class="num" style="color:${C.koromiko}">Jan Sadil</th>
+            <th class="num">Rozdíl</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Sledující celkem</td><td class="num">${fmt(rezab.followers.total)}</td><td class="num">${fmt(sadil.followers.total)}</td><td class="num">${diffCell(rezab.followers.total,sadil.followers.total)}</td></tr>
+          <tr><td>Růst sledujících</td><td class="num">▲ ${rezab.followers.change_pct} %</td><td class="num">▲ ${sadil.followers.change_pct} %</td><td class="num">${rezab.followers.change_pct>sadil.followers.change_pct?'<span class="up">▲ Řežáb</span>':'<span class="up">▲ Sadil</span>'}</td></tr>
+          <tr><td>Zobrazení obsahu</td><td class="num">${fmt(rezab.content.views)}</td><td class="num">${fmt(sadil.content.views)}</td><td class="num">${diffCell(rezab.content.views,sadil.content.views)}</td></tr>
+          <tr><td>Oslovení členové</td><td class="num">${fmt(rezab.content.members_reached)}</td><td class="num">${fmt(sadil.content.members_reached)}</td><td class="num">${diffCell(rezab.content.members_reached,sadil.content.members_reached)}</td></tr>
+          <tr><td>Interakce celkem</td><td class="num">${fmt(rezab.engagement.total)}</td><td class="num">${fmt(sadil.engagement.total)}</td><td class="num">${diffCell(rezab.engagement.total,sadil.engagement.total)}</td></tr>
+          <tr><td>Reakce</td><td class="num">${fmt(rezab.engagement.reactions)}</td><td class="num">${fmt(sadil.engagement.reactions)}</td><td class="num">${diffCell(rezab.engagement.reactions,sadil.engagement.reactions)}</td></tr>
+          <tr><td>Komentáře</td><td class="num">${fmt(rezab.engagement.comments)}</td><td class="num">${fmt(sadil.engagement.comments)}</td><td class="num">${diffCell(rezab.engagement.comments,sadil.engagement.comments)}</td></tr>
+        </tbody>
+      </table>
+    </div>`;
+
+  // Grafy sledujících
+  const follCfg = (series, color) => ({
+    type:'line',
+    data:{
+      labels: series.map(follLabel),
+      datasets:[{
+        data: series.map(p=>p.foll),
+        borderColor:color, backgroundColor:color+'22',
+        fill:true, tension:0.35, pointRadius:0, borderWidth:2
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{...tip, callbacks:{label:c=>`Sledující: ${fmt(c.parsed.y)}`}},
+        datalabels:{display:false}
+      },
+      scales:{
+        x:{grid:{display:false}, ticks:{font:{size:10}, maxTicksLimit:8, maxRotation:0}},
+        y:{grid:{color:C.grid}, border:{display:false}, ticks:{font:{size:11}, callback:v=>fmtK(v)}}
+      }
+    }
+  });
+  mkChart('ambsFollR', follCfg(rSeries, C.teal));
+  mkChart('ambsFollS', follCfg(sSeries, C.koromiko));
+
+  // Grafy zobrazení
+  const barCfg = (labels, data, color) => ({
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{data, backgroundColor:color+'cc', borderRadius:6}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{...tip, callbacks:{label:c=>`${fmt(c.parsed.y)} zobrazení`}},
+        datalabels:{
+          display:true, anchor:'end', align:'end',
+          formatter:v=>fmtK(v),
+          font:{family:"'Montserrat'",weight:'700',size:10},
+          color:C.ink
+        }
+      },
+      scales:baseScales()
+    }
+  });
+  mkChart('ambsViewsR', barCfg(rVLabels, rVData, C.teal));
+  mkChart('ambsViewsS', barCfg(sVLabels, sVData, C.koromiko));
 }
 
 // ---- 9. SOCIÁLNÍ SÍTĚ (FB + IG) ----
