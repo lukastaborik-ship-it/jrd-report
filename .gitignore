@@ -1,0 +1,8 @@
+# Zdrojová Excel tabulka se nenasazuje (data jsou předpočítaná v data.json)
+*.xlsx
+~$*.xlsx
+
+# OS / editor
+.DS_Store
+*.log
+.vercel
