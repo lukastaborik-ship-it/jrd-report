@@ -26,6 +26,8 @@ const charts = {};
 const fmt = n => (n==null?'—':Math.round(n).toLocaleString('cs-CZ'));
 const fmtK = n => n>=1000 ? (n/1000).toLocaleString('cs-CZ',{maximumFractionDigits:1})+' tis.' : fmt(n);
 const fmtMln = n => n>=1e6 ? (n/1e6).toLocaleString('cs-CZ',{maximumFractionDigits:2})+' mil.' : fmtK(n);
+const fmtDate = iso => { const [y,m,d]=iso.split('-'); return `${+d}.${+m}.${y}`; };
+const yearOf = iso => Number(iso.slice(0,4));
 const $ = s => document.querySelector(s);
 
 Chart.register(ChartDataLabels);
@@ -258,41 +260,56 @@ function renderNetwork(){
 
   const person = state.netTab;
   const li = DATA.network[person].LinkedIn;
-  const s = li.summary;
-  // summary tiles
-  const tiles = [
-    { l:'Sledující — start', v:fmt(s.foll_start), d:'' },
-    { l:'Sledující — dnes', v:fmt(s.foll_now), d:`+${fmt(s.foll_gain)} (+${s.foll_pct} %)` },
-    { l:'Spojení — start', v:fmt(s.conn_start), d:'' },
-    { l:'Spojení — dnes', v:fmt(s.conn_now), d:`+${fmt(s.conn_gain)} (+${s.conn_pct} %)` },
-  ];
-  $('#netSummary').innerHTML = tiles.map(t=>`<div class="ns-tile"><div class="l">${t.l}</div><div class="v">${t.v}</div>${t.d?`<div class="d">${t.d}</div>`:''}</div>`).join('');
+  const yr = state.year;
 
-  const labels = li.series.map(p=>p.date);
+  // Síť roste v čase → při zvoleném roce oříznout řadu ke KONCI toho roku
+  // (poslední záznam roku = maximální/aktuální hodnota k danému roku).
+  const cut = arr => (yr==='all') ? arr.slice() : arr.filter(p=>yearOf(p.date)<=Number(yr));
+  const series = (() => { const c = cut(li.series); return c.length ? c : li.series.slice(0,1); })();
+  const firstFoll = li.series.find(p=>p.foll!=null) || li.series[0];
+  const firstConn = li.series.find(p=>p.conn!=null) || li.series[0];
+  const lastFoll = [...series].reverse().find(p=>p.foll!=null) || firstFoll;
+  const lastConn = [...series].reverse().find(p=>p.conn!=null) || firstConn;
+  const gain = (a,b)=> a-b;
+  const pct  = (a,b)=> b ? Math.round((a-b)/b*100) : 0;
+
+  // summary tiles — hodnota vždy "k datu" posledního záznamu zvoleného období
+  const tiles = [
+    { l:'Sledující — start', v:fmt(firstFoll.foll), d:fmtDate(firstFoll.date), muted:true },
+    { l:`Sledující — k ${fmtDate(lastFoll.date)}`, v:fmt(lastFoll.foll), d:`+${fmt(gain(lastFoll.foll,firstFoll.foll))} (+${pct(lastFoll.foll,firstFoll.foll)} %)` },
+    { l:'Spojení — start', v:fmt(firstConn.conn), d:fmtDate(firstConn.date), muted:true },
+    { l:`Spojení — k ${fmtDate(lastConn.date)}`, v:fmt(lastConn.conn), d:`+${fmt(gain(lastConn.conn,firstConn.conn))} (+${pct(lastConn.conn,firstConn.conn)} %)` },
+  ];
+  $('#netSummary').innerHTML = tiles.map(t=>`<div class="ns-tile"><div class="l">${t.l}</div><div class="v">${t.v}</div>${t.d?`<div class="d"${t.muted?' style="color:var(--text-faint)"':''}>${t.d}</div>`:''}</div>`).join('');
+
+  const labels = series.map(p=>p.date);
   mkChart('netFollowers',{ type:'line', data:{ labels,
-    datasets:[{ label:'Sledující', data:li.series.map(p=>p.foll), borderColor:PERSON_COLOR[person],
+    datasets:[{ label:'Sledující', data:series.map(p=>p.foll), borderColor:PERSON_COLOR[person],
       backgroundColor:'rgba(95,140,148,0.10)', fill:true, tension:0.25, pointRadius:0, borderWidth:2.5 }]},
     options:netLineOpts() });
   mkChart('netConnections',{ type:'line', data:{ labels,
-    datasets:[{ label:'Spojení', data:li.series.map(p=>p.conn), borderColor:C.koromiko,
+    datasets:[{ label:'Spojení', data:series.map(p=>p.conn), borderColor:C.koromiko,
       backgroundColor:'rgba(255,177,78,0.12)', fill:true, tension:0.25, pointRadius:0, borderWidth:2.5 }]},
     options:netLineOpts() });
 
-  // yearly follower gain
-  const yg = s.foll_yearly_gain||{};
-  const yrs = Object.keys(yg);
+  // přírůstek sledujících po letech (jen roky <= zvolený rok)
+  const yg = li.summary.foll_yearly_gain||{};
+  let yrs = Object.keys(yg);
+  if(yr!=='all') yrs = yrs.filter(y=>Number(y)<=Number(yr));
   mkChart('netYearly',{ type:'bar', data:{ labels:yrs,
     datasets:[{ data:yrs.map(y=>yg[y]), backgroundColor:PERSON_COLOR[person], borderRadius:3 }]},
     options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
       datalabels:{display:true,anchor:'end',align:'end',formatter:v=>'+'+fmt(v),font:{family:"'Montserrat'",weight:'700',size:11},color:C.black},
       tooltip:{...tip,callbacks:{label:c=>'+'+fmt(c.parsed.y)+' sledujících'}}}, scales:baseScales() }});
 
-  // IG/FB note for JRD
+  // IG/FB note for JRD — také k datu zvoleného období
   if(person==='JRD'){
-    const ig=DATA.network.JRD.Instagram?.summary, fb=DATA.network.JRD.Facebook?.summary;
+    const lastUp = plat => { const c = cut(DATA.network.JRD[plat]?.series||[]).filter(p=>p.foll!=null); return c.length?c[c.length-1]:null; };
+    const ig=lastUp('Instagram'), fb=lastUp('Facebook');
     let extra='';
-    if(ig) extra+=`Instagram: ${fmt(ig.foll_start)} → <b>${fmt(ig.foll_now)}</b> sledujících (+${fmt(ig.foll_gain)}). `;
-    if(fb) extra+=`Facebook: ${fmt(fb.foll_start)} → <b>${fmt(fb.foll_now)}</b> sledujících.`;
+    if(ig) extra+=`Instagram: <b>${fmt(ig.foll)}</b> sledujících (k ${fmtDate(ig.date)}). `;
+    if(fb) extra+=`Facebook: <b>${fmt(fb.foll)}</b> sledujících (k ${fmtDate(fb.date)}).`;
+    if(!ig && !fb) extra = `Pro zvolené období zatím nejsou data (Instagram a Facebook sledujeme od dubna 2025).`;
     $('#netNote').innerHTML = `📊 <b>Bonus — další platformy JRD.</b> ${extra}`;
     $('#netNote').style.display='';
   } else {
