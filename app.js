@@ -19,7 +19,7 @@ const SECTIONS = [
   { id:'pipeline', icon:'7', title:'Stav obsahu',       sub:'Publikováno vs. rozpracováno',             person:false },
   { id:'profiles', icon:'8', title:'Profily ambasadorů', sub:'LinkedIn Analytics — data přímo z platformy', person:false },
   { id:'social',   icon:'9', title:'Sociální sítě',      sub:'Facebook & Instagram — statistiky 2026',       person:false },
-  { id:'ambs',     icon:'↔', title:'Komparace LinkedIn',  sub:'Jan Řežáb vs Jan Sadil — grafy vedle sebe',   person:false },
+  { id:'ambs',     icon:'↔', title:'Komparace LinkedIn',  sub:'Jan Řežáb vs Jan Sadil — grafy vedle sebe',   person:false, year:false },
 ];
 
 let DATA = null;
@@ -94,6 +94,7 @@ function render(){
   $('#secTitle').textContent = sec.title;
   $('#secSub').textContent = sec.sub;
   $('#personWrap').style.display = sec.person ? '' : 'none';
+  $('#yearWrap').style.display   = sec.year === false ? 'none' : '';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('is-active'));
   $('#s-'+sec.id).classList.add('is-active');
   $('#yearSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('is-active', String(b.dataset.year)===String(state.year)));
@@ -702,33 +703,37 @@ function renderAmbs(){
     </div>
 
     <!-- Sledující vedle sebe -->
-    <div class="ambs-label-row section-gap">
-      <div class="ambs-section-label" style="color:${C.teal}">Růst sledujících — Jan Řežáb</div>
-      <div class="ambs-section-label" style="color:${C.koromiko}">Růst sledujících — Jan Sadil</div>
-    </div>
-    <div class="grid grid--2">
+    <div class="grid grid--2 section-gap">
       <div class="card">
-        <div class="card__head"><div class="card__hint">${fmt(rSeries[0]?.foll)} → ${fmt(rSeries[rSeries.length-1]?.foll)} sledujících · 2026</div></div>
+        <div class="card__head">
+          <div class="card__title" style="color:${C.teal}">Růst sledujících — Jan Řežáb</div>
+          <div class="card__hint">${fmt(rSeries[0]?.foll)} → ${fmt(rSeries[rSeries.length-1]?.foll)} sledujících · 2026</div>
+        </div>
         <div class="chart-wrap"><canvas id="ambsFollR"></canvas></div>
       </div>
       <div class="card">
-        <div class="card__head"><div class="card__hint">${fmt(sSeries[0]?.foll)} → ${fmt(sSeries[sSeries.length-1]?.foll)} sledujících · 2026</div></div>
+        <div class="card__head">
+          <div class="card__title" style="color:${C.koromiko}">Růst sledujících — Jan Sadil</div>
+          <div class="card__hint">${fmt(sSeries[0]?.foll)} → ${fmt(sSeries[sSeries.length-1]?.foll)} sledujících · 2026</div>
+        </div>
         <div class="chart-wrap"><canvas id="ambsFollS"></canvas></div>
       </div>
     </div>
 
     <!-- Zobrazení vedle sebe -->
-    <div class="ambs-label-row section-gap">
-      <div class="ambs-section-label" style="color:${C.teal}">Zobrazení po měsících — Jan Řežáb</div>
-      <div class="ambs-section-label" style="color:${C.koromiko}">Zobrazení po měsících — Jan Sadil</div>
-    </div>
-    <div class="grid grid--2">
+    <div class="grid grid--2 section-gap">
       <div class="card">
-        <div class="card__head"><div class="card__hint">2026 · LinkedIn Analytics</div></div>
+        <div class="card__head">
+          <div class="card__title" style="color:${C.teal}">Zobrazení po měsících — Jan Řežáb</div>
+          <div class="card__hint">2026 · LinkedIn Analytics</div>
+        </div>
         <div class="chart-wrap"><canvas id="ambsViewsR"></canvas></div>
       </div>
       <div class="card">
-        <div class="card__head"><div class="card__hint">2026 · LinkedIn Analytics</div></div>
+        <div class="card__head">
+          <div class="card__title" style="color:${C.koromiko}">Zobrazení po měsících — Jan Sadil</div>
+          <div class="card__hint">2026 · LinkedIn Analytics</div>
+        </div>
         <div class="chart-wrap"><canvas id="ambsViewsS"></canvas></div>
       </div>
     </div>

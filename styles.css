@@ -351,11 +351,11 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 .ambs-kpi__d { font-size:var(--fs-sm); font-weight:var(--fw-semibold); }
 .ambs-label-row {
   display:grid; grid-template-columns:1fr 1fr; gap:var(--space-6);
-  padding:0 2px; margin-bottom:-12px;
+  padding:0 2px; margin-bottom:8px;
 }
 .ambs-section-label {
   font-family:var(--font-heading); font-weight:var(--fw-bold);
-  font-size:var(--fs-sm); text-transform:uppercase; letter-spacing:var(--ls-caps);
+  font-size:15px; border-left:3px solid currentColor; padding-left:10px;
 }
 .tbl .up   { color:var(--ob-teal-600); font-weight:var(--fw-semibold); }
 .tbl .down { color:var(--ob-tulip);    font-weight:var(--fw-semibold); }
