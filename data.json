@@ -13197,6 +13197,46 @@
     "interactions": 23
    }
   ],
-  "ig_feed": "assets/igfeed.png"
+  "ig_feed": "assets/igfeed.png",
+  "posts_by_platform": {
+   "Facebook": 32,
+   "Instagram": 32,
+   "LinkedIn": 31
+  },
+  "facebook": {
+   "views_total": 263188,
+   "views_organic": 34159,
+   "views_paid": 229049,
+   "reach_organic": 24200,
+   "interactions": 62
+  },
+  "instagram": {
+   "views_total": 173991,
+   "views_organic": 84920,
+   "views_paid": 89071,
+   "reach": 35000,
+   "interactions": 1300
+  },
+  "linkedin_jrd": {
+   "note": "JRD LinkedIn — firemní stránka",
+   "top_posts": [
+    {
+     "file": "assets/li-top1.png",
+     "text": "JRD v součinnosti s partnery pracuje na novém projektu — pohled zákulisí výstavby.",
+     "views": null
+    },
+    {
+     "file": "assets/li-top2.png",
+     "text": "Na Barrandově vzniká nový kousek Prahy. Spolu s ním i řešení, které dává smysl v době sucha a přívalových deštů. V rámci projektu #TerraBarrandov připravujeme na části střechy mokřad…",
+     "views": null
+    },
+    {
+     "file": "assets/li-top3.png",
+     "text": "Hledáme nové projekty — Fond pro udržitelný život. Přihlášky do 31. března 2026.",
+     "views": null
+    }
+   ],
+   "posts": 31
+  }
  }
 }
