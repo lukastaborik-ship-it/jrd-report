@@ -958,12 +958,37 @@ function renderSocial(){
       <div class="chart-wrap chart-wrap--tall"><canvas id="socFollowers"></canvas></div>
     </div>
 
-    <!-- 4. LinkedIn JRD — TOP 3 příspěvky -->
+    <!-- 4. LinkedIn JRD — statistiky + TOP 3 příspěvky -->
     ${li.top_posts?.length ? `
     <div class="card section-gap">
       <div class="card__head">
-        <div class="card__title" style="color:${C_LI}">LinkedIn JRD — TOP 3 příspěvky</div>
-        <div class="card__hint">firemní stránka · ${sm.period}</div>
+        <div class="card__title" style="color:${C_LI}">LinkedIn JRD — firemní stránka</div>
+        <div class="card__hint">${sm.period} · ${li.posts ?? 31} příspěvků</div>
+      </div>
+      ${li.stats ? `<div class="soc-platform-stats" style="margin-bottom:20px">
+        <div class="soc-pstat">
+          <span class="soc-pstat__val" style="color:${C_LI}">${fmt(li.stats.impressions_total)}</span>
+          <span class="soc-pstat__lbl">Zobrazení celkem</span>
+        </div>
+        <div class="soc-pstat">
+          <span class="soc-pstat__val" style="color:${C_LI}">${fmt(li.stats.impressions_avg)}</span>
+          <span class="soc-pstat__lbl">Průměr / příspěvek</span>
+        </div>
+        <div class="soc-pstat">
+          <span class="soc-pstat__val" style="color:${C_LI}">${fmt(li.stats.likes)}</span>
+          <span class="soc-pstat__lbl">Likes</span>
+        </div>
+        <div class="soc-pstat">
+          <span class="soc-pstat__val" style="color:${C_LI}">${fmt(li.stats.comments)}</span>
+          <span class="soc-pstat__lbl">Komentáře</span>
+        </div>
+        <div class="soc-pstat">
+          <span class="soc-pstat__val" style="color:${C_LI}">${fmt(li.stats.interactions)}</span>
+          <span class="soc-pstat__lbl">Interakcí celkem</span>
+        </div>
+      </div>` : ''}
+      <div class="card__head" style="margin-bottom:12px">
+        <div class="card__title" style="font-size:var(--fs-sm);color:${C_LI}">TOP 3 příspěvky</div>
       </div>
       <div class="top-posts-grid" style="grid-template-columns:repeat(3,1fr)">
         ${li.top_posts.map((p,i)=>`
