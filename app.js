@@ -367,14 +367,26 @@ function renderCompare(){
 
 // ---- 6. TOP ----
 function renderTop(){
-  const rows = DATA.top_posts.map((p,i)=>`
-    <tr><td class="rank">${i+1}</td>
-      <td><span class="badge ${p.name==='Jan Řežáb'?'badge--jr':'badge--js'}">${p.name==='Jan Řežáb'?'J. Řežáb':'J. Sadil'}</span></td>
-      <td>${p.date}</td>
-      <td>${p.idea||'<span class="muted">—</span>'}</td>
-      <td class="num">${fmt(p.imp)}</td>
-      <td class="num">${fmt(p.likes)}</td>
-      <td class="num">${fmt(p.comments)}</td></tr>`).join('');
+  const yr = state.year;
+  const filtered = yr === 'all'
+    ? DATA.top_posts
+    : DATA.top_posts.filter(p => {
+        // date format "DD.MM.YYYY"
+        const parts = p.date.split('.');
+        return parts.length === 3 && parts[2] === String(yr);
+      });
+  const hint = yr === 'all' ? 'za celé období' : `rok ${yr}`;
+  if($('#topHint')) $('#topHint').textContent = `TOP 20 podle dosahu (${hint})`;
+  const rows = filtered.length
+    ? filtered.map((p,i)=>`
+        <tr><td class="rank">${i+1}</td>
+          <td><span class="badge ${p.name==='Jan Řežáb'?'badge--jr':'badge--js'}">${p.name==='Jan Řežáb'?'J. Řežáb':'J. Sadil'}</span></td>
+          <td>${p.date}</td>
+          <td>${p.idea||'<span class="muted">—</span>'}</td>
+          <td class="num">${fmt(p.imp)}</td>
+          <td class="num">${fmt(p.likes)}</td>
+          <td class="num">${fmt(p.comments)}</td></tr>`).join('')
+    : `<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">Žádné příspěvky pro rok ${yr}</td></tr>`;
   $('#topTable').innerHTML = `<thead><tr><th>#</th><th>Autor</th><th>Datum</th><th>Hlavní myšlenka</th><th class="num">Dosah</th><th class="num">Lajky</th><th class="num">Koment.</th></tr></thead><tbody>${rows}</tbody>`;
 }
 
