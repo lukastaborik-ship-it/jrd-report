@@ -146,6 +146,25 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 .kpi--dark .kpi__value { color:var(--ob-white); }
 .kpi--dark .kpi__sub { color:var(--ob-gray-300); }
 
+/* Reach summary bar */
+.reach-summary { margin-bottom:16px; }
+.reach-sum-bar {
+  display:flex; gap:0; background:var(--surface-card);
+  border:1px solid var(--border-default); border-radius:var(--radius-md); overflow:hidden;
+}
+.reach-sum-item {
+  flex:1; padding:16px 20px; border-right:1px solid var(--border-default); min-width:0;
+}
+.reach-sum-item:last-child { border-right:none; }
+.reach-sum-item--main { flex:2; background:var(--ob-teal-600); }
+.reach-sum-item--main .reach-sum-val { color:#fff; }
+.reach-sum-item--main .reach-sum-lbl { color:rgba(255,255,255,0.75); }
+.reach-sum-val {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.8rem;
+  color:var(--text-strong); line-height:1.1;
+}
+.reach-sum-lbl { font-size:12px; color:var(--text-muted); margin-top:4px; }
+
 /* chart wrap */
 .chart-wrap { position:relative; height:340px; }
 .chart-wrap.tall { height:420px; }

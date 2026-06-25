@@ -175,6 +175,42 @@ function renderOverview(){
 function renderReach(){
   const yearForCharts = state.year==='all' ? DATA.meta.years[DATA.meta.years.length-1] : Number(state.year);
   const m = DATA.monthly[`${yearForCharts}|${state.person}`] || new Array(12).fill(0);
+
+  // --- Souhrn nad grafy ---
+  const totalReach = state.year === 'all'
+    ? DATA.meta.years.reduce((s,y) => {
+        const row = DATA.yearly[y] || {};
+        if(state.person === 'all') return s + Object.values(row).reduce((a,b)=>a+b,0);
+        return s + (row[state.person] || 0);
+      }, 0)
+    : m.reduce((a,b)=>a+b,0);
+
+  const kAll = state.year === 'all'
+    ? DATA.meta.years.reduce((s,y) => {
+        const k2 = DATA.kpis[`${y}|${state.person==='all'?'Jan Řežáb':state.person}`] || {};
+        return { posts: (s.posts||0)+(k2.posts||0), avg: 0 };
+      }, {})
+    : DATA.kpis[kkey()] || {};
+  const posts  = state.year === 'all' ? (kAll.posts||'—') : (kAll.posts||'—');
+  const avg    = posts && totalReach && posts !== '—' ? Math.round(totalReach / posts) : null;
+  const period = state.year === 'all' ? 'celé období' : `rok ${yearForCharts}`;
+  const who    = state.person === 'all' ? 'oba ambasadoři' : state.person;
+
+  $('#reachSummary').innerHTML = `
+    <div class="reach-sum-bar">
+      <div class="reach-sum-item reach-sum-item--main">
+        <div class="reach-sum-val">${fmtMln(totalReach)}</div>
+        <div class="reach-sum-lbl">Celkový dosah — ${period} · ${who}</div>
+      </div>
+      ${posts !== '—' ? `<div class="reach-sum-item">
+        <div class="reach-sum-val">${fmt(posts)}</div>
+        <div class="reach-sum-lbl">Příspěvků</div>
+      </div>` : ''}
+      ${avg ? `<div class="reach-sum-item">
+        <div class="reach-sum-val">${fmt(avg)}</div>
+        <div class="reach-sum-lbl">Průměr / příspěvek</div>
+      </div>` : ''}
+    </div>`;
   mkChart('reachMonthly',{ type:'bar', data:{ labels:MONTHS_SHORT,
     datasets:[{ label:`Dosah ${yearForCharts}`, data:m, backgroundColor:C.teal, borderRadius:3 }]},
     options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{...tip,callbacks:{label:c=>fmt(c.parsed.y)}}}, scales:baseScales() }});
