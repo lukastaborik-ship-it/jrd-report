@@ -1064,6 +1064,24 @@ function renderSocial(){
       </div>
     </div>
 
+    <!-- Komentář k poklesu FB + IG -->
+    <div class="card section-gap" style="border-left:4px solid var(--ob-teal-600)">
+      <div class="card__head" style="padding-bottom:8px">
+        <div class="card__title" style="font-size:0.95rem">Proč došlo k poklesu zobrazení na Facebooku i Instagramu?</div>
+      </div>
+      <div style="font-size:0.9rem;line-height:1.7;color:var(--text-body);display:flex;flex-direction:column;gap:10px">
+        <p style="margin:0">
+          <strong>Razantně nižší investice do reklam</strong> — v H1 2026 jsme do placené propagace investovali 38 000 Kč oproti 134 000 Kč v H2 2025 (pokles o 72 %). To se přímočaře promítá do propadu placeného dosahu na obou platformách.
+        </p>
+        <p style="margin:0">
+          <strong>Metodika Meta počítá boostované příspěvky jako organiku</strong> — v předchozím půlroce (H2 2025) jsme aktivně propagovali i organické příspěvky. Meta tyto zobrazení zahrnuje do organického dosahu, takže čísla organiky za H2 2025 jsou uměle vyšší. Srovnání H2 2025 vs. H1 2026 tím pádem opticky zhoršuje i organický výkon, přestože přímá příčina je placená propagace.
+        </p>
+        <p style="margin:0">
+          <strong>Reálný organický výkon roste</strong> — když jsme prošli jednotlivé příspěvky, které nebyly vůbec propagované, vychází nám, že čistě organický dosah na příspěvek meziročně roste o <strong style="color:var(--ob-teal-600)">+12 %</strong>. Tento údaj je součástí přehledu výše.
+        </p>
+      </div>
+    </div>
+
     <!-- 3. Graf sledujících -->
     <div class="card section-gap">
       <div class="card__head">
