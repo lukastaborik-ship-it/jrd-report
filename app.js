@@ -703,6 +703,8 @@ function renderAmbs(){
 
   const rPosts = DATA.kpis['2026|Jan Řežáb']?.posts ?? '—';
   const sPosts = DATA.kpis['2026|Jan Sadil']?.posts ?? '—';
+  const rAvg   = DATA.kpis['2026|Jan Řežáb']?.avg   ?? 0;
+  const sAvg   = DATA.kpis['2026|Jan Sadil']?.avg   ?? 0;
 
   const rViews = DATA.monthly['2026|Jan Řežáb'] || new Array(12).fill(0);
   const sViews = DATA.monthly['2026|Jan Sadil'] || new Array(12).fill(0);
@@ -713,9 +715,12 @@ function renderAmbs(){
 
   const follLabel = s => { const [,m,d]=s.date.split('-'); return `${+d}.${+m}.`; };
 
-  const diffCell = (a,b) => {
-    const d = a - b;
-    return `<span class="${d>0?'up':'down'}">${d>0?'▲':'▼'} ${fmt(Math.abs(d))}</span>`;
+  // diffCell(r, s): r=Řežáb value, s=Sadil value — teal when Řežáb wins, koromiko when Sadil wins
+  const diffCell = (r, s) => {
+    const d = r - s;
+    if(d === 0) return `<span style="color:var(--text-faint)">—</span>`;
+    const col = d > 0 ? C.teal : C.koromiko;
+    return `<span style="color:${col}">${d>0?'▲':'▼'} ${fmt(Math.abs(d))}</span>`;
   };
 
   $('#ambsContent').innerHTML = `
@@ -807,10 +812,11 @@ function renderAmbs(){
           </tr>
         </thead>
         <tbody>
-          <tr><td>Příspěvků v roce 2026</td><td class="num">${rPosts}</td><td class="num">${sPosts}</td><td class="num">${diffCell(sPosts,rPosts)}</td></tr>
+          <tr><td>Příspěvků v roce 2026</td><td class="num">${rPosts}</td><td class="num">${sPosts}</td><td class="num">${diffCell(rPosts,sPosts)}</td></tr>
           <tr><td>Sledující celkem</td><td class="num">${fmt(rezab.followers.total)}</td><td class="num">${fmt(sadil.followers.total)}</td><td class="num">${diffCell(rezab.followers.total,sadil.followers.total)}</td></tr>
-          <tr><td>Růst sledujících</td><td class="num">▲ ${rezab.followers.change_pct} %</td><td class="num">▲ ${sadil.followers.change_pct} %</td><td class="num">${rezab.followers.change_pct>sadil.followers.change_pct?'<span class="up">▲ Řežáb</span>':'<span class="up">▲ Sadil</span>'}</td></tr>
+          <tr><td>Růst sledujících</td><td class="num">▲ ${rezab.followers.change_pct} %</td><td class="num">▲ ${sadil.followers.change_pct} %</td><td class="num">${rezab.followers.change_pct>sadil.followers.change_pct?`<span style="color:${C.teal}">▲ Řežáb</span>`:`<span style="color:${C.koromiko}">▲ Sadil</span>`}</td></tr>
           <tr><td>Zobrazení obsahu</td><td class="num">${fmt(rezab.content.views)}</td><td class="num">${fmt(sadil.content.views)}</td><td class="num">${diffCell(rezab.content.views,sadil.content.views)}</td></tr>
+          <tr><td>Průměrný dosah / příspěvek</td><td class="num">${fmt(rAvg)}</td><td class="num">${fmt(sAvg)}</td><td class="num">${diffCell(rAvg,sAvg)}</td></tr>
           <tr><td>Oslovení členové</td><td class="num">${fmt(rezab.content.members_reached)}</td><td class="num">${fmt(sadil.content.members_reached)}</td><td class="num">${diffCell(rezab.content.members_reached,sadil.content.members_reached)}</td></tr>
           <tr><td>Interakce celkem</td><td class="num">${fmt(rezab.engagement.total)}</td><td class="num">${fmt(sadil.engagement.total)}</td><td class="num">${diffCell(rezab.engagement.total,sadil.engagement.total)}</td></tr>
           <tr><td>Reakce</td><td class="num">${fmt(rezab.engagement.reactions)}</td><td class="num">${fmt(sadil.engagement.reactions)}</td><td class="num">${diffCell(rezab.engagement.reactions,sadil.engagement.reactions)}</td></tr>
