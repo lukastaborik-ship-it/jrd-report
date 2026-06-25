@@ -27,7 +27,7 @@ let state = { section:'overview', year:'all', person:'all', netTab:'Jan Řežáb
 const charts = {};
 
 const fmt = n => (n==null?'—':Math.round(n).toLocaleString('cs-CZ'));
-const fmtK = n => n>=1000 ? (n/1000).toLocaleString('cs-CZ',{maximumFractionDigits:1})+' tis.' : fmt(n);
+const fmtK = n => n>=1e6 ? (n/1e6).toLocaleString('cs-CZ',{maximumFractionDigits:1})+' mil.' : n>=1000 ? (n/1000).toLocaleString('cs-CZ',{maximumFractionDigits:1})+' tis.' : fmt(n);
 const fmtMln = n => n>=1e6 ? (n/1e6).toLocaleString('cs-CZ',{maximumFractionDigits:2})+' mil.' : fmtK(n);
 const fmtDate = iso => { const [y,m,d]=iso.split('-'); return `${+d}.${+m}.${y}`; };
 const yearOf = iso => Number(iso.slice(0,4));
