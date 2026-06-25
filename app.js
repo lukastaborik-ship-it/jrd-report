@@ -780,64 +780,41 @@ function renderAmbs(){
       </div>
     </div>
 
-    <!-- SSI Social Selling Index -->
+    <!-- SSI Social Selling Index — screenshoty vedle sebe -->
     <div class="card section-gap">
       <div class="card__head">
         <div class="card__title">Social Selling Index (SSI)</div>
-        <div class="card__hint">LinkedIn Sales Navigator · ${rezab.ssi?.date_prev} → ${rezab.ssi?.date_now}</div>
+        <div class="card__hint">LinkedIn Sales Navigator · srovnání ${rezab.ssi?.date_prev} vs. ${rezab.ssi?.date_now}</div>
       </div>
-      <div class="grid grid--2" style="gap:24px;margin-top:4px">
-        ${(()=>{
-          const ssiCard = (name, ssi, color) => {
-            if(!ssi) return '';
-            const diff = ssi.score_now - ssi.score_prev;
-            const diffBadge = diff > 0
-              ? `<span style="color:var(--ob-teal-600);font-size:0.9rem;font-weight:700">▲ ${diff}</span>`
-              : diff < 0
-              ? `<span style="color:#e53e3e;font-size:0.9rem;font-weight:700">▼ ${Math.abs(diff)}</span>`
-              : `<span style="color:var(--text-faint);font-size:0.9rem">beze změny</span>`;
-            const cn = ssi.components_now;
-            const comps = [
-              { label:'Establish your brand',   val:cn.brand,         color:'#E96C40' },
-              { label:'Find the right people',  val:cn.people,        color:'#9B5DE5' },
-              { label:'Engage with insights',   val:cn.insights,      color:'#2E7D73' },
-              { label:'Build relationships',    val:cn.relationships, color:'#0A66C2' },
-            ];
-            return `<div class="ssi-card" style="border-left:4px solid ${color}">
-              <div class="ssi-card__header">
-                <span class="ssi-card__name" style="color:${color}">${name}</span>
-              </div>
-              <div class="ssi-card__score-row">
-                <span class="ssi-card__score">${ssi.score_now}</span>
-                <span class="ssi-card__max">/100</span>
-                <span style="margin-left:10px">${diffBadge}</span>
-                <span style="font-size:0.8rem;color:var(--text-faint);margin-left:6px">od ${ssi.date_prev}</span>
-              </div>
-              <div class="ssi-card__ranks">
-                <span class="ssi-rank-pill" style="background:${color}22;color:${color}">Top ${ssi.industry_rank} % v oboru</span>
-                <span class="ssi-rank-pill" style="background:${color}22;color:${color}">Top ${ssi.network_rank} % v síti</span>
-              </div>
-              <div class="ssi-comps">
-                ${comps.map(c=>`
-                  <div class="ssi-comp">
-                    <div class="ssi-comp__top">
-                      <span class="ssi-comp__lbl">${c.label}</span>
-                      <span class="ssi-comp__val" style="color:${c.color}">${c.val}</span>
-                    </div>
-                    <div class="ssi-comp__track">
-                      <div class="ssi-comp__fill" style="width:${Math.round(c.val/25*100)}%;background:${c.color}"></div>
-                    </div>
-                  </div>`).join('')}
-              </div>
-              <div class="ssi-bench">
-                <span>Průměr v oboru: <b>${ssi.industry_avg}</b></span>
-                <span>Průměr v síti: <b>${ssi.network_avg}</b></span>
-              </div>
-            </div>`;
-          };
-          return ssiCard('Jan Řežáb', rezab.ssi, C.teal) +
-                 ssiCard('Jan Sadil',  sadil.ssi, C.koromiko);
-        })()}
+
+      <!-- Jan Řežáb -->
+      <div style="margin-bottom:28px">
+        <div class="ssi-person-label" style="color:${C.teal}">Jan Řežáb</div>
+        <div class="ssi-screenshots">
+          <div class="ssi-shot">
+            <div class="ssi-shot__date">${rezab.ssi?.date_prev}</div>
+            <img src="assets/ssi-rezab-2025.png" alt="SSI Řežáb ${rezab.ssi?.date_prev}" class="ssi-shot__img">
+          </div>
+          <div class="ssi-shot">
+            <div class="ssi-shot__date ssi-shot__date--now">${rezab.ssi?.date_now} <span style="color:var(--ob-teal-600);font-weight:700">▲ 1</span></div>
+            <img src="assets/ssi-rezab-2026.png" alt="SSI Řežáb ${rezab.ssi?.date_now}" class="ssi-shot__img">
+          </div>
+        </div>
+      </div>
+
+      <!-- Jan Sadil -->
+      <div>
+        <div class="ssi-person-label" style="color:${C.koromiko}">Jan Sadil</div>
+        <div class="ssi-screenshots">
+          <div class="ssi-shot">
+            <div class="ssi-shot__date">${sadil.ssi?.date_prev}</div>
+            <img src="assets/ssi-sadil-2025.png" alt="SSI Sadil ${sadil.ssi?.date_prev}" class="ssi-shot__img">
+          </div>
+          <div class="ssi-shot">
+            <div class="ssi-shot__date ssi-shot__date--now">${sadil.ssi?.date_now} <span style="color:var(--text-faint);font-weight:600">beze změny</span></div>
+            <img src="assets/ssi-sadil-2026.png" alt="SSI Sadil ${sadil.ssi?.date_now}" class="ssi-shot__img">
+          </div>
+        </div>
       </div>
     </div>
 

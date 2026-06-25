@@ -452,6 +452,14 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 .ssi-comp__track { height:7px; background:var(--border-default); border-radius:4px; overflow:hidden; }
 .ssi-comp__fill { height:100%; border-radius:4px; transition:width 0.4s ease; }
 .ssi-bench { display:flex; gap:20px; font-size:0.82rem; color:var(--text-faint); padding-top:4px; border-top:1px solid var(--border-default); }
+
+/* SSI screenshot layout */
+.ssi-person-label { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1rem; margin-bottom:10px; }
+.ssi-screenshots { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.ssi-shot { display:flex; flex-direction:column; gap:6px; }
+.ssi-shot__date { font-family:var(--font-heading); font-weight:var(--fw-semibold); font-size:0.85rem; color:var(--text-muted); padding:4px 0; }
+.ssi-shot__date--now { color:var(--text-strong); }
+.ssi-shot__img { width:100%; border-radius:var(--radius-sm); border:1px solid var(--border-default); box-shadow:0 2px 8px rgba(0,0,0,0.08); }
 .ambs-name { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:var(--fs-h3); }
 .ambs-tag { font-size:var(--fs-sm); color:var(--text-muted); margin-top:2px; }
 .ambs-kpis { display:flex; gap:24px; flex-wrap:wrap; }
