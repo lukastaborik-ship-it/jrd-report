@@ -863,7 +863,38 @@ function renderSocial(){
   const ig = sm.instagram || {};
   const li = sm.linkedin_jrd || {};
 
+  // Body: highlighted start/end points for follower chart
+  const fbData = allDates.map(d=>fbByDate[d]??null);
+  const igData = allDates.map(d=>igByDate[d]??null);
+  const lastIdx = allDates.length - 1;
+  const fbRadii = allDates.map((_,i)=> i===0||i===lastIdx ? 6 : 0);
+  const igRadii = allDates.map((_,i)=> i===0||i===lastIdx ? 6 : 0);
+
   $('#socialContent').innerHTML = `
+
+    <!-- 0. Celkové KPI -->
+    <div class="grid grid--kpi" style="margin-bottom:24px">
+      <div class="kpi-card">
+        <div class="kpi__val">${sm.posts_count}</div>
+        <div class="kpi__lbl">Příspěvků</div>
+        <div class="kpi__sub">${sm.period}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi__val">${fmtMln(sm.stats_2026.views)}</div>
+        <div class="kpi__lbl">Zobrazení celkem</div>
+        <div class="kpi__sub">FB + IG dohromady</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi__val">${fmtK(sm.stats_2026.reach)}</div>
+        <div class="kpi__lbl">Dosah</div>
+        <div class="kpi__sub">unikátní uživatelé</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi__val">${fmt(sm.stats_2026.interactions)}</div>
+        <div class="kpi__lbl">Interakcí</div>
+        <div class="kpi__sub">reakce, komentáře, sdílení</div>
+      </div>
+    </div>
 
     <!-- 1. Příspěvky po platformách -->
     <div class="soc-platforms-row">
@@ -915,39 +946,16 @@ function renderSocial(){
       </div>
     </div>
 
-    <!-- 3. Graf sledujících + bilance -->
-    <div class="grid grid--2 section-gap">
-      <div class="card">
-        <div class="card__head">
-          <div class="card__title">Vývoj sledujících</div>
-          <div class="card__hint">FB &amp; IG — od začátku spolupráce</div>
-        </div>
-        <div class="chart-wrap"><canvas id="socFollowers"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card__head">
-          <div class="card__title">Bilance sledujících</div>
-          <div class="card__hint">celková změna od začátku spolupráce</div>
-        </div>
-        <div class="soc-change-wrap">
-          <div class="soc-change-item">
-            <div class="soc-change-icon" style="background:${C_FB}">f</div>
-            <div>
-              <div class="soc-change-name">Facebook</div>
-              <div class="soc-change-val ${fbChange>=0?'up':'down'}">${fbChange>=0?'▲':'▼'} ${Math.abs(fbChange)} sledujících</div>
-              <div class="soc-change-now">${fmt(fbSeries[fbSeries.length-1]?.foll)} aktuálně</div>
-            </div>
-          </div>
-          <div class="soc-change-item">
-            <div class="soc-change-icon" style="background:${C_IG}">▶</div>
-            <div>
-              <div class="soc-change-name">Instagram</div>
-              <div class="soc-change-val ${igChange>=0?'up':'down'}">${igChange>=0?'▲':'▼'} ${Math.abs(igChange)} sledujících</div>
-              <div class="soc-change-now">${fmt(igSeries[igSeries.length-1]?.foll)} aktuálně</div>
-            </div>
-          </div>
+    <!-- 3. Graf sledujících -->
+    <div class="card section-gap">
+      <div class="card__head">
+        <div class="card__title">Vývoj sledujících — od začátku spolupráce</div>
+        <div class="card__hint">
+          <span style="color:${C_FB};font-weight:700">Facebook</span> ${fbChange>=0?'▲':'▼'} ${Math.abs(fbChange)} · aktuálně ${fmt(fbSeries[fbSeries.length-1]?.foll)}&ensp;|&ensp;
+          <span style="color:${C_IG};font-weight:700">Instagram</span> ${igChange>=0?'▲':'▼'} ${Math.abs(igChange)} · aktuálně ${fmt(igSeries[igSeries.length-1]?.foll)}
         </div>
       </div>
+      <div class="chart-wrap chart-wrap--tall"><canvas id="socFollowers"></canvas></div>
     </div>
 
     <!-- 4. LinkedIn JRD — TOP 3 příspěvky -->
@@ -1001,20 +1009,93 @@ function renderSocial(){
       </div>
     </div>`;
 
+  const labels = allDates.map(d => { const [y,m,day]=d.split('-'); return `${+day}.${+m}.${y.slice(2)}`; });
+
   mkChart('socFollowers', {
     type:'line',
     data:{
-      labels: allDates.map(d => { const [y,m,day]=d.split('-'); return `${+day}.${+m}.${y.slice(2)}`; }),
+      labels,
       datasets:[
-        { label:'Facebook', data:allDates.map(d=>fbByDate[d]??null), borderColor:C_FB, backgroundColor:`rgba(${C_FB_rgb},0.08)`, fill:true, tension:0.3, pointRadius:0, borderWidth:2, spanGaps:true },
-        { label:'Instagram', data:allDates.map(d=>igByDate[d]??null), borderColor:C_IG, backgroundColor:`rgba(${C_IG_rgb},0.08)`, fill:true, tension:0.3, pointRadius:0, borderWidth:2, spanGaps:true }
+        {
+          label:'Facebook',
+          data: fbData,
+          yAxisID: 'yFB',
+          borderColor: C_FB,
+          backgroundColor: `rgba(${C_FB_rgb},0.12)`,
+          fill: true, tension: 0.35,
+          borderWidth: 3,
+          pointRadius: fbRadii,
+          pointBackgroundColor: C_FB,
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          spanGaps: true,
+          datalabels: {
+            display: ctx => ctx.dataIndex === 0 || ctx.dataIndex === lastIdx,
+            anchor: ctx => ctx.dataIndex === 0 ? 'start' : 'end',
+            align: ctx => ctx.dataIndex === 0 ? 'right' : 'left',
+            formatter: v => fmt(v),
+            font: { family:"'Montserrat'", weight:'700', size:12 },
+            color: C_FB,
+            backgroundColor: 'rgba(255,255,255,0.85)',
+            borderRadius: 4,
+            padding: { top:3, bottom:3, left:6, right:6 }
+          }
+        },
+        {
+          label:'Instagram',
+          data: igData,
+          yAxisID: 'yIG',
+          borderColor: C_IG,
+          backgroundColor: `rgba(${C_IG_rgb},0.12)`,
+          fill: true, tension: 0.35,
+          borderWidth: 3,
+          pointRadius: igRadii,
+          pointBackgroundColor: C_IG,
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          spanGaps: true,
+          datalabels: {
+            display: ctx => ctx.dataIndex === 0 || ctx.dataIndex === lastIdx,
+            anchor: ctx => ctx.dataIndex === 0 ? 'start' : 'end',
+            align: ctx => ctx.dataIndex === 0 ? 'right' : 'left',
+            formatter: v => fmt(v),
+            font: { family:"'Montserrat'", weight:'700', size:12 },
+            color: C_IG,
+            backgroundColor: 'rgba(255,255,255,0.85)',
+            borderRadius: 4,
+            padding: { top:3, bottom:3, left:6, right:6 }
+          }
+        }
       ]
     },
     options:{
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index', intersect:false},
-      plugins:{ legend:{display:true}, tooltip:{...tip, callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}}, datalabels:{display:false} },
-      scales:{ x:{grid:{display:false}, ticks:{font:{size:10}, maxTicksLimit:12, maxRotation:0}}, y:{grid:{color:C.grid}, border:{display:false}, ticks:{font:{size:11}, callback:v=>fmtK(v)}} }
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins:{
+        legend: { display:true, labels:{ font:{size:13}, padding:16 } },
+        tooltip: { ...tip, callbacks:{ label: c=>`${c.dataset.label}: ${fmt(c.parsed.y)} sledujících` } },
+        datalabels: {}
+      },
+      scales:{
+        x:{
+          grid:{ display:false },
+          ticks:{ font:{size:10}, maxTicksLimit:14, maxRotation:0 }
+        },
+        yFB:{
+          position:'left',
+          grid:{ color:C.grid },
+          border:{ display:false },
+          ticks:{ font:{size:11}, callback:v=>fmtK(v) },
+          title:{ display:true, text:'Facebook', color:C_FB, font:{size:11,weight:'600'} }
+        },
+        yIG:{
+          position:'right',
+          grid:{ drawOnChartArea:false },
+          border:{ display:false },
+          ticks:{ font:{size:11}, callback:v=>fmtK(v) },
+          title:{ display:true, text:'Instagram', color:C_IG, font:{size:11,weight:'600'} }
+        }
+      }
     }
   });
 }

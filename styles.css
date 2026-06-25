@@ -150,6 +150,7 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 .chart-wrap { position:relative; height:340px; }
 .chart-wrap.tall { height:420px; }
 .chart-wrap.short { height:260px; }
+.chart-wrap--tall { position:relative; height:420px; }
 
 /* tables */
 .tbl { width:100%; border-collapse:collapse; font-size:var(--fs-sm); }
