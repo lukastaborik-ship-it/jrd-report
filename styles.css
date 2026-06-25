@@ -374,6 +374,16 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 .soc-split-legend span { display:flex; align-items:center; gap:5px; }
 .soc-dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0; }
 
+/* Témata příspěvků */
+.soc-topics-wrap {
+  display:flex; gap:32px; align-items:center; flex-wrap:wrap;
+}
+.soc-topics-tbl { flex:1; min-width:280px; }
+.soc-topic-dot {
+  display:inline-block; width:10px; height:10px; border-radius:50%;
+  margin-right:8px; vertical-align:middle; flex-shrink:0;
+}
+
 /* ---- Top posts s obrázky ---- */
 .top-posts-grid {
   display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:4px;

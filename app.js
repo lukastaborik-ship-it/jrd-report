@@ -979,6 +979,45 @@ function renderSocial(){
       <div class="chart-wrap chart-wrap--tall"><canvas id="socFollowers"></canvas></div>
     </div>
 
+    <!-- 3b. Témata příspěvků -->
+    ${sm.topic_breakdown?.length ? `
+    <div class="card section-gap">
+      <div class="card__head">
+        <div class="card__title">Témata příspěvků</div>
+        <div class="card__hint">rozložení obsahu · FB + IG + LinkedIn · ${sm.period}</div>
+      </div>
+      <div class="soc-topics-wrap">
+        <div class="chart-wrap chart-wrap--short" style="max-width:280px"><canvas id="socTopics"></canvas></div>
+        <table class="tbl soc-topics-tbl">
+          <thead><tr><th>Téma</th><th class="num">FB</th><th class="num">IG</th><th class="num">LI</th><th class="num">Celkem</th><th class="num">%</th></tr></thead>
+          <tbody>
+            ${(()=>{
+              const tb = sm.topic_breakdown;
+              const totFB = pby.Facebook || 32;
+              const totIG = pby.Instagram || 32;
+              const totLI = pby.LinkedIn || 31;
+              const grand = totFB + totIG + totLI;
+              return tb.map(t => {
+                const scaleFB = Math.round(t.per_platform * totFB / 33);
+                const scaleIG = Math.round(t.per_platform * totIG / 33);
+                const scaleLI = Math.round(t.per_platform * totLI / 33);
+                const total   = scaleFB + scaleIG + scaleLI;
+                const pct     = Math.round(total / grand * 100);
+                return `<tr>
+                  <td><span class="soc-topic-dot" style="background:${t.color}"></span>${t.topic}</td>
+                  <td class="num">${scaleFB}</td>
+                  <td class="num">${scaleIG}</td>
+                  <td class="num">${scaleLI}</td>
+                  <td class="num"><strong>${total}</strong></td>
+                  <td class="num">${pct} %</td>
+                </tr>`;
+              }).join('');
+            })()}
+          </tbody>
+        </table>
+      </div>
+    </div>` : ''}
+
     <!-- 4. LinkedIn JRD — statistiky + TOP 3 příspěvky -->
     ${li.top_posts?.length ? `
     <div class="card section-gap">
@@ -1145,6 +1184,41 @@ function renderSocial(){
       }
     }
   });
+
+  // Donut chart — témata příspěvků
+  if(sm.topic_breakdown?.length){
+    const tb = sm.topic_breakdown;
+    const totFB = pby.Facebook || 32;
+    const totIG = pby.Instagram || 32;
+    const totLI = pby.LinkedIn || 31;
+    const counts = tb.map(t =>
+      Math.round(t.per_platform * totFB / 33) +
+      Math.round(t.per_platform * totIG / 33) +
+      Math.round(t.per_platform * totLI / 33)
+    );
+    const grand = counts.reduce((a,b)=>a+b,0);
+    mkChart('socTopics', {
+      type:'doughnut',
+      data:{
+        labels: tb.map(t=>t.topic),
+        datasets:[{ data:counts, backgroundColor:tb.map(t=>t.color), borderWidth:2, borderColor:'#fff' }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        cutout:'62%',
+        plugins:{
+          legend:{ display:false },
+          tooltip:{ callbacks:{ label: c=>`${c.label}: ${c.parsed} příspěvků` } },
+          datalabels:{
+            display:true,
+            formatter:(v)=>`${Math.round(v/grand*100)} %`,
+            color:'#fff',
+            font:{ family:"'Montserrat'", weight:'700', size:13 }
+          }
+        }
+      }
+    });
+  }
 }
 
 init();

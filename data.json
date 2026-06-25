@@ -13254,6 +13254,28 @@
     "interactions": 692
    }
   },
-  "ig_profile": "assets/ig-profile-new.png"
+  "ig_profile": "assets/ig-profile-new.png",
+  "topic_breakdown": [
+   {
+    "topic": "Real Estate",
+    "color": "#2b6b3a",
+    "per_platform": 21
+   },
+   {
+    "topic": "Energo",
+    "color": "#4a9068",
+    "per_platform": 6
+   },
+   {
+    "topic": "Eco Fund",
+    "color": "#d4876a",
+    "per_platform": 3
+   },
+   {
+    "topic": "Nadace",
+    "color": "#8b1a1a",
+    "per_platform": 3
+   }
+  ]
  }
 }
