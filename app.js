@@ -243,38 +243,71 @@ function renderTiming(){
   const t = DATA.timing[kkey()];
   if(!t){ return; }
   const colorByVal = (arr,max) => arr.map(v=> `rgba(95,140,148,${0.25+0.75*(v/max||0)})`);
-  // day
-  const dMax = Math.max(...t.day.map(d=>d.avg));
-  mkChart('timeDay',{ type:'bar', data:{ labels:t.day.map(d=>d.label),
-    datasets:[{ data:t.day.map(d=>d.avg), backgroundColor:colorByVal(t.day.map(d=>d.avg),dMax), borderRadius:3 }]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
-      tooltip:{...tip,callbacks:{label:c=>fmt(c.parsed.y)+' prům. dosah',afterLabel:c=>`${t.day[c.dataIndex].n} příspěvků`+(t.day[c.dataIndex].low?' (malý vzorek)':'')}}},
-      scales:baseScales() }});
-  // hour
-  const hours = t.hour.filter(h=>h.n>0);
-  const hMax = Math.max(...hours.map(h=>h.avg));
-  mkChart('timeHour',{ type:'bar', data:{ labels:hours.map(h=>h.hour+':00'),
-    datasets:[{ data:hours.map(h=>h.avg), backgroundColor:colorByVal(hours.map(h=>h.avg),hMax), borderRadius:3 }]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
-      tooltip:{...tip,callbacks:{label:c=>fmt(c.parsed.y)+' prům. dosah',afterLabel:c=>`${hours[c.dataIndex].n} příspěvků`+(hours[c.dataIndex].low?' (malý vzorek)':'')}}},
-      scales:baseScales() }});
+
+  // Minimální počet příspěvků pro zobrazení v grafech
+  const MIN_DAY = 5;   // den musí mít alespoň 5 příspěvků
+  const MIN_HOUR = 5;  // hodina musí mít alespoň 5 příspěvků
+
+  // Zkontroluj, zda je dost dat (pro roční pohledy bývá málo)
+  const totalPosts = t.day.reduce((s,d)=>s+d.n,0);
+  const tooFew = totalPosts < 15;
+
+  // day — zobraz jen dny s dostatkem dat
+  const days = t.day.filter(d=>d.n >= MIN_DAY);
+  if(days.length){
+    const dMax = Math.max(...days.map(d=>d.avg));
+    mkChart('timeDay',{ type:'bar', data:{ labels:days.map(d=>d.label),
+      datasets:[{ data:days.map(d=>d.avg), backgroundColor:colorByVal(days.map(d=>d.avg),dMax), borderRadius:3 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
+        tooltip:{...tip,callbacks:{label:c=>fmt(c.parsed.y)+' prům. dosah',afterLabel:c=>`${days[c.dataIndex].n} příspěvků`+(days[c.dataIndex].low?' (malý vzorek)':'')}}},
+        scales:baseScales() }});
+  } else {
+    const cv = document.getElementById('timeDay');
+    if(cv){ cv.style.display='none'; cv.insertAdjacentHTML('afterend','<div class="lowsample" style="padding:32px;text-align:center">Nedostatek dat pro tento filtr</div>'); }
+  }
+
+  // hour — pouze hodiny s alespoň MIN_HOUR příspěvky (vyloučí ojedinělé noční posty)
+  const hours = t.hour.filter(h=>h.n >= MIN_HOUR);
+  if(hours.length){
+    const hMax = Math.max(...hours.map(h=>h.avg));
+    mkChart('timeHour',{ type:'bar', data:{ labels:hours.map(h=>h.hour+':00'),
+      datasets:[{ data:hours.map(h=>h.avg), backgroundColor:colorByVal(hours.map(h=>h.avg),hMax), borderRadius:3 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
+        tooltip:{...tip,callbacks:{label:c=>fmt(c.parsed.y)+' prům. dosah',afterLabel:c=>`${hours[c.dataIndex].n} příspěvků`+(hours[c.dataIndex].low?' (malý vzorek)':'')}}},
+        scales:baseScales() }});
+  } else {
+    const cv = document.getElementById('timeHour');
+    if(cv){ cv.style.display='none'; cv.insertAdjacentHTML('afterend','<div class="lowsample" style="padding:32px;text-align:center">Nedostatek dat pro tento filtr</div>'); }
+  }
+
   // month
-  const mMax = Math.max(...t.month.map(m=>m.avg));
-  mkChart('timeMonth',{ type:'bar', data:{ labels:MONTHS_SHORT,
-    datasets:[{ data:t.month.map(m=>m.avg), backgroundColor:colorByVal(t.month.map(m=>m.avg),mMax), borderRadius:3 }]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
-      tooltip:{...tip,callbacks:{label:c=>fmt(c.parsed.y)+' prům. dosah',afterLabel:c=>`${t.month[c.dataIndex].n} příspěvků`}}},
-      scales:baseScales() }});
-  renderHeatmap(t.heatmap);
+  const months = t.month.filter(m=>m.n>0);
+  if(months.length){
+    const mMax = Math.max(...months.map(m=>m.avg));
+    mkChart('timeMonth',{ type:'bar', data:{ labels:MONTHS_SHORT,
+      datasets:[{ data:t.month.map(m=>m.avg), backgroundColor:colorByVal(t.month.map(m=>m.avg),mMax), borderRadius:3 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
+        tooltip:{...tip,callbacks:{label:c=>fmt(c.parsed.y)+' prům. dosah',afterLabel:c=>`${t.month[c.dataIndex].n} příspěvků`}}},
+        scales:baseScales() }});
+  }
+
+  // heatmap — jen buňky s alespoň 2 příspěvky (n=1 je šum)
+  renderHeatmap(t.heatmap.filter(c=>c.n >= 2));
+
   // note
-  const best = [...t.day].sort((a,b)=>b.avg-a.avg)[0];
-  const bestH = [...t.hour].filter(h=>!h.low&&h.n>0).sort((a,b)=>b.avg-a.avg)[0];
+  const bestDay = [...days].sort((a,b)=>b.avg-a.avg)[0];
+  const bestH   = [...hours].filter(h=>!h.low).sort((a,b)=>b.avg-a.avg)[0];
   const outlierNote = (t.outliers_excluded > 0)
-    ? ` <span class="lowsample">Z výpočtu bylo vyloučeno ${t.outliers_excluded} příspěvků s dosahem nad ${fmtK(t.outlier_cap)} — tyto odlehlé hodnoty by jinak zkreslily průměry.</span>`
+    ? ` <span class="lowsample">Vyloučeno ${t.outliers_excluded} příspěvků nad ${fmtK(t.outlier_cap)} — outlier hodnoty zkreslují průměry.</span>`
     : '';
-  $('#timeNote').innerHTML = `💡 V tomto výběru vychází nejlépe <b>${best?best.label:'—'}</b> (prům. ${fmt(best?best.avg:0)} zobrazení)` +
-    (bestH?` a publikace kolem <b>${bestH.hour}:00</b> (prům. ${fmt(bestH.avg)}).`:'.') +
-    ` <span class="lowsample">Hodiny a dny s méně než 10 příspěvky berte orientačně.</span>${outlierNote}`;
+  const sparseNote = tooFew
+    ? ` <span class="lowsample">Málo dat pro tento filtr (${totalPosts} příspěvků) — pro přesnější přehled zvolte širší rozsah.</span>`
+    : '';
+  $('#timeNote').innerHTML = bestDay
+    ? `💡 Nejlépe vychází <b>${bestDay.label}</b> (prům. ${fmt(bestDay.avg)} zobrazení, ${bestDay.n} přísp.)` +
+      (bestH?` a čas kolem <b>${bestH.hour}:00</b> (prům. ${fmt(bestH.avg)}, ${bestH.n} přísp.).`:'.') +
+      ` <span class="lowsample">Zobrazeny jen časové sloty s min. 5 příspěvky.</span>${outlierNote}${sparseNote}`
+    : `<span class="lowsample">Pro tento filtr není dostatek dat.${sparseNote}</span>`;
 }
 
 function renderHeatmap(cells){
