@@ -330,18 +330,29 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 }
 .soc-platform-lbl { font-size:12px; color:var(--text-faint); }
 
-/* Organika vs. reklamy split bar */
-.soc-platform-stats {
-  display:flex; gap:12px; margin-bottom:14px;
+/* Organika vs. reklamy — metric rows */
+.soc-metrics { display:flex; flex-direction:column; gap:0; }
+.soc-metric-row {
+  display:flex; align-items:center; gap:8px;
+  padding:9px 0; border-bottom:1px solid var(--border-subtle);
 }
-.soc-pstat {
-  flex:1; display:flex; flex-direction:column; gap:2px;
-  border:1px solid var(--border-default); border-radius:var(--radius-sm); padding:10px;
+.soc-metric-row:last-child { border-bottom:none; }
+.soc-metric-lbl {
+  flex:1; font-size:13px; color:var(--text-muted);
 }
-.soc-pstat__val {
-  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.2rem;
-  color:var(--text-strong);
+.soc-metric-val {
+  font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.05rem;
+  color:var(--text-strong); min-width:80px; text-align:right;
 }
+.soc-pct {
+  font-family:var(--font-heading); font-weight:var(--fw-semibold); font-size:12px;
+  min-width:72px; text-align:right;
+}
+
+/* legacy pstat (kept for fallback) */
+.soc-platform-stats { display:flex; gap:12px; margin-bottom:14px; }
+.soc-pstat { flex:1; display:flex; flex-direction:column; gap:2px; border:1px solid var(--border-default); border-radius:var(--radius-sm); padding:10px; }
+.soc-pstat__val { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1.2rem; color:var(--text-strong); }
 .soc-pstat__lbl { font-size:11px; color:var(--text-muted); }
 .soc-split-bar {
   display:flex; height:12px; border-radius:6px; overflow:hidden; margin-bottom:6px;

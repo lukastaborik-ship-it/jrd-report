@@ -845,17 +845,34 @@ function renderSocial(){
   const igChange = sm.follower_change_since_start.Instagram;
   const pby = sm.posts_by_platform || {};
 
-  // Organika vs. reklamy: split bar helper
+  // Procentní změna s šipkou a barvou
+  const pctBadge = p => {
+    if(p == null) return '';
+    const up = p >= 0;
+    const col = up ? 'var(--ob-teal-600)' : '#e53e3e';
+    const sign = up ? '▲' : '▼';
+    return `<span class="soc-pct" style="color:${col}">${sign} ${Math.abs(p).toFixed(1).replace('.',',')} %</span>`;
+  };
+
+  // Řádek metriky: název | číslo | % změna
+  const metricRow = (label, value, pct) =>
+    `<div class="soc-metric-row">
+      <span class="soc-metric-lbl">${label}</span>
+      <span class="soc-metric-val">${fmt(value)}</span>
+      ${pctBadge(pct)}
+    </div>`;
+
+  // Split bar (podíl organika vs. reklamy)
   const splitBar = (org, paid, total, colorOrg, colorPaid) => {
     const pOrg  = Math.round(org/total*100);
     const pPaid = 100 - pOrg;
-    return `<div class="soc-split-bar">
+    return `<div class="soc-split-bar" style="margin-top:14px">
       <div style="width:${pOrg}%;background:${colorOrg}" title="Organika ${pOrg}%"></div>
       <div style="width:${pPaid}%;background:${colorPaid}" title="Reklamy ${pPaid}%"></div>
     </div>
     <div class="soc-split-legend">
-      <span><span class="soc-dot" style="background:${colorOrg}"></span>Organika ${pOrg}% — ${fmt(org)}</span>
-      <span><span class="soc-dot" style="background:${colorPaid}"></span>Reklamy ${pPaid}% — ${fmt(paid)}</span>
+      <span><span class="soc-dot" style="background:${colorOrg}"></span>Organika ${pOrg} %</span>
+      <span><span class="soc-dot" style="background:${colorPaid}"></span>Reklamy ${pPaid} %</span>
     </div>`;
   };
 
@@ -925,24 +942,28 @@ function renderSocial(){
           <div class="card__title" style="color:${C_FB}">Facebook — zobrazení 2026</div>
           <div class="card__hint">${sm.period}</div>
         </div>
-        <div class="soc-platform-stats">
-          <div class="soc-pstat"><span class="soc-pstat__val">${fmt(fb.views_total)}</span><span class="soc-pstat__lbl">Celkem zobrazení</span></div>
-          <div class="soc-pstat"><span class="soc-pstat__val">${fmt(fb.reach_organic)}</span><span class="soc-pstat__lbl">Dosah (organika)</span></div>
-          <div class="soc-pstat"><span class="soc-pstat__val">${fmt(fb.interactions)}</span><span class="soc-pstat__lbl">Interakcí</span></div>
+        <div class="soc-metrics">
+          ${metricRow('Z organiky',       fb.views_organic, fb.views_organic_pct)}
+          ${metricRow('Z reklam',         fb.views_paid,    fb.views_paid_pct)}
+          ${metricRow('Celkem zobrazení', fb.views_total,   fb.views_total_pct)}
+          ${metricRow('Diváci (dosah)',   fb.reach,         null)}
+          ${metricRow('Interakce',        fb.interactions,  fb.interactions_pct)}
         </div>
-        ${splitBar(fb.views_organic, fb.views_paid, fb.views_total, C_FB+'bb', C_FB+'44')}
+        ${splitBar(fb.views_organic, fb.views_paid, fb.views_total, C_FB+'cc', C_FB+'44')}
       </div>
       <div class="card">
         <div class="card__head">
           <div class="card__title" style="color:${C_IG}">Instagram — zobrazení 2026</div>
           <div class="card__hint">${sm.period}</div>
         </div>
-        <div class="soc-platform-stats">
-          <div class="soc-pstat"><span class="soc-pstat__val">${fmt(ig.views_total)}</span><span class="soc-pstat__lbl">Celkem zobrazení</span></div>
-          <div class="soc-pstat"><span class="soc-pstat__val">${fmt(ig.reach)}</span><span class="soc-pstat__lbl">Dosah</span></div>
-          <div class="soc-pstat"><span class="soc-pstat__val">${fmt(ig.interactions)}</span><span class="soc-pstat__lbl">Interakcí</span></div>
+        <div class="soc-metrics">
+          ${metricRow('Z organiky',       ig.views_organic, ig.views_organic_pct)}
+          ${metricRow('Z reklam',         ig.views_paid,    ig.views_paid_pct)}
+          ${metricRow('Celkem zobrazení', ig.views_total,   ig.views_total_pct)}
+          ${metricRow('Dosah',            ig.reach,         ig.reach_pct)}
+          ${metricRow('Interakce',        ig.interactions,  ig.interactions_pct)}
         </div>
-        ${splitBar(ig.views_organic, ig.views_paid, ig.views_total, C_IG+'bb', C_IG+'44')}
+        ${splitBar(ig.views_organic, ig.views_paid, ig.views_total, C_IG+'cc', C_IG+'44')}
       </div>
     </div>
 

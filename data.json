@@ -13205,17 +13205,26 @@
   },
   "facebook": {
    "views_total": 263188,
-   "views_organic": 34159,
+   "views_total_pct": -92.1,
+   "views_organic": 34139,
+   "views_organic_pct": -61.1,
    "views_paid": 229049,
-   "reach_organic": 24200,
-   "interactions": 62
+   "views_paid_pct": -93.0,
+   "reach": 87694,
+   "interactions": 396,
+   "interactions_pct": -92.5
   },
   "instagram": {
    "views_total": 173991,
+   "views_total_pct": -66.6,
    "views_organic": 84920,
+   "views_organic_pct": 0.8,
    "views_paid": 89071,
+   "views_paid_pct": -79.6,
    "reach": 35000,
-   "interactions": 1300
+   "reach_pct": -82.0,
+   "interactions": 1300,
+   "interactions_pct": 8.0
   },
   "linkedin_jrd": {
    "note": "JRD LinkedIn — firemní stránka",
