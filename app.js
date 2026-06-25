@@ -990,19 +990,19 @@ function renderSocial(){
     <!-- 1. Příspěvky po platformách -->
     <div class="soc-platforms-row">
       <div class="soc-platform-card" style="border-top:4px solid ${C_FB}">
-        <div class="soc-platform-icon" style="background:${C_FB}">f</div>
+        <div class="soc-platform-icon" style="background:${C_FB}"><svg viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div>
         <div class="soc-platform-name">Facebook</div>
         <div class="soc-platform-posts">${pby.Facebook ?? '—'}</div>
         <div class="soc-platform-lbl">příspěvků 2026</div>
       </div>
       <div class="soc-platform-card" style="border-top:4px solid ${C_IG}">
-        <div class="soc-platform-icon" style="background:${C_IG}">▶</div>
+        <div class="soc-platform-icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg></div>
         <div class="soc-platform-name">Instagram</div>
         <div class="soc-platform-posts">${pby.Instagram ?? '—'}</div>
         <div class="soc-platform-lbl">příspěvků 2026</div>
       </div>
       <div class="soc-platform-card" style="border-top:4px solid ${C_LI}">
-        <div class="soc-platform-icon" style="background:${C_LI}">in</div>
+        <div class="soc-platform-icon" style="background:${C_LI}"><svg viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V9h4v2a6 6 0 0 1 2-3z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
         <div class="soc-platform-name">LinkedIn</div>
         <div class="soc-platform-posts">${pby.LinkedIn ?? '—'}</div>
         <div class="soc-platform-lbl">příspěvků 2026</div>
@@ -1022,6 +1022,19 @@ function renderSocial(){
           ${metricRow('Celkem zobrazení', fb.views_total,   fb.views_total_pct)}
           ${metricRow('Diváci (dosah)',   fb.reach,         null)}
           ${metricRow('Interakce',        fb.interactions,  fb.interactions_pct)}
+          <div style="border-top:1px solid var(--border-default);margin:10px 0 6px"></div>
+          <div class="soc-metric-row">
+            <span class="soc-metric-lbl">Investice do reklam</span>
+            <span style="font-size:0.82em;color:var(--text-faint)">${fmt(fb.ad_spend_h2_2025)} Kč&thinsp;→&thinsp;</span>
+            <span class="soc-metric-val">${fmt(fb.ad_spend_h1_2026)} Kč</span>
+            ${pctBadge(fb.ad_spend_pct)}
+          </div>
+          <div class="soc-metric-row">
+            <span class="soc-metric-lbl">Ø organický dosah / přísp.</span>
+            <span style="font-size:0.82em;color:var(--text-faint)">${fmt(fb.avg_organic_reach_h2_2025)}&thinsp;→&thinsp;</span>
+            <span class="soc-metric-val">${fmt(fb.avg_organic_reach_h1_2026)}</span>
+            ${pctBadge(fb.avg_organic_reach_pct)}
+          </div>
         </div>
         ${splitBar(fb.views_organic, fb.views_paid, fb.views_total, C_FB+'cc', C_FB+'44')}
       </div>

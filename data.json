@@ -12734,7 +12734,13 @@
    "views_paid_pct": -93.0,
    "reach": 87694,
    "interactions": 396,
-   "interactions_pct": -92.5
+   "interactions_pct": -92.5,
+   "ad_spend_h2_2025": 134000,
+   "ad_spend_h1_2026": 38000,
+   "ad_spend_pct": -72.0,
+   "avg_organic_reach_h2_2025": 392,
+   "avg_organic_reach_h1_2026": 438,
+   "avg_organic_reach_pct": 12.0
   },
   "instagram": {
    "views_total": 173991,
