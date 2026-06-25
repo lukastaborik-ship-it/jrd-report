@@ -13043,7 +13043,29 @@
      "text": "Investice do nemovitostí a rozvoj JRD — pohled na náš projekt…",
      "views": 9100
     }
-   ]
+   ],
+   "ssi": {
+    "date_prev": "11.11.2025",
+    "date_now": "25.6.2026",
+    "score_prev": 58,
+    "score_now": 59,
+    "industry_rank": 1,
+    "network_rank": 8,
+    "components_prev": {
+     "brand": 14.738,
+     "people": 7.625,
+     "insights": 10.25,
+     "relationships": 25
+    },
+    "components_now": {
+     "brand": 16.577,
+     "people": 7.125,
+     "insights": 10.25,
+     "relationships": 25
+    },
+    "industry_avg": 29,
+    "network_avg": 42
+   }
   },
   "Jan Sadil": {
    "period": "1. 1. 2026 – 24. 6. 2026",
@@ -13281,6 +13303,28 @@
       "pct": 2
      }
     ]
+   },
+   "ssi": {
+    "date_prev": "11.11.2025",
+    "date_now": "25.6.2026",
+    "score_prev": 53,
+    "score_now": 53,
+    "industry_rank": 3,
+    "network_rank": 19,
+    "components_prev": {
+     "brand": 10.25,
+     "people": 6.9,
+     "insights": 11,
+     "relationships": 25
+    },
+    "components_now": {
+     "brand": 10.4,
+     "people": 6.9,
+     "insights": 11,
+     "relationships": 25
+    },
+    "industry_avg": 29,
+    "network_avg": 41
    }
   }
  }

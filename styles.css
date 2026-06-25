@@ -435,6 +435,23 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 /* ---- Komparace ambasadorů ---- */
 .ambs-card { }
 .ambs-prof-row { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+
+/* SSI — Social Selling Index */
+.ssi-card { background:var(--surface-card); border-radius:var(--radius-md); padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
+.ssi-card__header { }
+.ssi-card__name { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:1rem; }
+.ssi-card__score-row { display:flex; align-items:baseline; gap:4px; }
+.ssi-card__score { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:2.8rem; line-height:1; color:var(--text-strong); }
+.ssi-card__max { font-size:1rem; color:var(--text-faint); }
+.ssi-card__ranks { display:flex; gap:8px; flex-wrap:wrap; }
+.ssi-rank-pill { font-family:var(--font-heading); font-weight:var(--fw-semibold); font-size:0.78rem; padding:3px 10px; border-radius:20px; }
+.ssi-comps { display:flex; flex-direction:column; gap:10px; }
+.ssi-comp__top { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+.ssi-comp__lbl { font-size:0.82rem; color:var(--text-muted); }
+.ssi-comp__val { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:0.9rem; }
+.ssi-comp__track { height:7px; background:var(--border-default); border-radius:4px; overflow:hidden; }
+.ssi-comp__fill { height:100%; border-radius:4px; transition:width 0.4s ease; }
+.ssi-bench { display:flex; gap:20px; font-size:0.82rem; color:var(--text-faint); padding-top:4px; border-top:1px solid var(--border-default); }
 .ambs-name { font-family:var(--font-heading); font-weight:var(--fw-bold); font-size:var(--fs-h3); }
 .ambs-tag { font-size:var(--fs-sm); color:var(--text-muted); margin-top:2px; }
 .ambs-kpis { display:flex; gap:24px; flex-wrap:wrap; }
