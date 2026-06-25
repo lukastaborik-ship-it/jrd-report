@@ -13197,7 +13197,7 @@
     "interactions": 23
    }
   ],
-  "ig_feed": "assets/igfeed.png",
+  "ig_feed": "assets/ig-feed-new.png",
   "posts_by_platform": {
    "Facebook": 32,
    "Instagram": 32,
@@ -13253,6 +13253,7 @@
     "comments": 23,
     "interactions": 692
    }
-  }
+  },
+  "ig_profile": "assets/ig-profile-new.png"
  }
 }

@@ -1048,10 +1048,11 @@ function renderSocial(){
     <div class="card section-gap">
       <div class="card__head">
         <div class="card__title">Současný Instagram feed</div>
-        <div class="card__hint">vizuální přehled profilu</div>
+        <div class="card__hint">vizuální přehled profilu jrd_cz</div>
       </div>
-      <div class="soc-feed-wrap">
-        <img src="${sm.ig_feed}" alt="Instagram feed" class="soc-feed-img" loading="lazy">
+      <div class="soc-ig-duo">
+        ${sm.ig_profile ? `<img src="${sm.ig_profile}" alt="Instagram profil" class="soc-ig-duo__profile" loading="lazy">` : ''}
+        <img src="${sm.ig_feed}" alt="Instagram feed" class="soc-ig-duo__feed" loading="lazy">
       </div>
     </div>`;
 

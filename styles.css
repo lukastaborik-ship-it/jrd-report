@@ -305,6 +305,16 @@ h1,h2,h3,h4 { font-family:var(--font-heading); font-weight:var(--fw-bold);
 .soc-feed-img {
   width:100%; max-height:620px; object-fit:contain; display:block;
 }
+.soc-ig-duo {
+  display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start;
+}
+.soc-ig-duo__profile,
+.soc-ig-duo__feed {
+  width:100%; border-radius:var(--radius-sm); display:block; object-fit:contain;
+}
+@media(max-width:720px){
+  .soc-ig-duo { grid-template-columns:1fr; }
+}
 
 /* Platform cards (příspěvky po platformách) */
 .soc-platforms-row {
