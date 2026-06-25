@@ -928,7 +928,7 @@ function renderSocial(){
         <div class="soc-platform-stats">
           <div class="soc-pstat"><span class="soc-pstat__val">${fmt(fb.views_total)}</span><span class="soc-pstat__lbl">Celkem zobrazení</span></div>
           <div class="soc-pstat"><span class="soc-pstat__val">${fmt(fb.reach_organic)}</span><span class="soc-pstat__lbl">Dosah (organika)</span></div>
-          <div class="soc-pstat"><span class="soc-pstat__val">${fb.interactions}</span><span class="soc-pstat__lbl">Interakcí</span></div>
+          <div class="soc-pstat"><span class="soc-pstat__val">${fmt(fb.interactions)}</span><span class="soc-pstat__lbl">Interakcí</span></div>
         </div>
         ${splitBar(fb.views_organic, fb.views_paid, fb.views_total, C_FB+'bb', C_FB+'44')}
       </div>
