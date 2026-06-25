@@ -27,7 +27,8 @@ WEEKDAYS_SHORT = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"]
 MONTHS = ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen",
           "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"]
 PERSONS = ["Jan Řežáb", "Jan Sadil", "JRD"]
-LOW_SAMPLE = 10  # práh pro upozornění na malý vzorek
+LOW_SAMPLE = 10          # práh pro upozornění na malý vzorek
+TIMING_OUTLIER_CAP = 35_000  # příspěvky nad tento dosah se z výpočtu nejlepšího času vyloučí
 
 
 # ----------------------------------------------------------------------------
@@ -203,11 +204,15 @@ def build(posts, status_counter, total_prepared, net):
     # ---- nejlepší den / hodina / měsíc (průměrný dosah) ----
     def timing(year, person):
         sub = subset(year, person)
+        # Outlier příspěvky (imp > TIMING_OUTLIER_CAP) by zkreslily průměry →
+        # do výpočtu časování vstupují jen příspěvky v rámci normálního dosahu.
+        sub_timing = [p for p in sub if p["imp"] <= TIMING_OUTLIER_CAP]
+        outliers_excluded = len(sub) - len(sub_timing)
         byday = defaultdict(list)
         byhour = defaultdict(list)
         bymonth = defaultdict(list)
         heat = defaultdict(list)  # (weekday,hour)
-        for p in sub:
+        for p in sub_timing:
             d = p["date"]
             byday[d.weekday()].append(p["imp"])
             byhour[d.hour].append(p["imp"])
@@ -232,7 +237,8 @@ def build(posts, status_counter, total_prepared, net):
                 if vals:
                     heatmap.append({"d": wd, "h": h,
                                     "avg": round(sum(vals) / len(vals)), "n": len(vals)})
-        return {"day": day, "hour": hour, "month": month, "heatmap": heatmap}
+        return {"day": day, "hour": hour, "month": month, "heatmap": heatmap,
+                "outliers_excluded": outliers_excluded, "outlier_cap": TIMING_OUTLIER_CAP}
 
     timing_data = {}
     for yr in (["all"] + years):

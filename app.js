@@ -269,9 +269,12 @@ function renderTiming(){
   // note
   const best = [...t.day].sort((a,b)=>b.avg-a.avg)[0];
   const bestH = [...t.hour].filter(h=>!h.low&&h.n>0).sort((a,b)=>b.avg-a.avg)[0];
+  const outlierNote = (t.outliers_excluded > 0)
+    ? ` <span class="lowsample">Z výpočtu bylo vyloučeno ${t.outliers_excluded} příspěvků s dosahem nad ${fmtK(t.outlier_cap)} — tyto odlehlé hodnoty by jinak zkreslily průměry.</span>`
+    : '';
   $('#timeNote').innerHTML = `💡 V tomto výběru vychází nejlépe <b>${best?best.label:'—'}</b> (prům. ${fmt(best?best.avg:0)} zobrazení)` +
     (bestH?` a publikace kolem <b>${bestH.hour}:00</b> (prům. ${fmt(bestH.avg)}).`:'.') +
-    ` <span class="lowsample">Hodiny a dny s méně než 10 příspěvky berte orientačně.</span>`;
+    ` <span class="lowsample">Hodiny a dny s méně než 10 příspěvky berte orientačně.</span>${outlierNote}`;
 }
 
 function renderHeatmap(cells){
