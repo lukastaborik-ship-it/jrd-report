@@ -16,7 +16,7 @@ const SECTIONS = [
   { id:'network',  icon:'4', title:'Růst sítě',         sub:'Sledující a spojení v čase',               person:false },
   { id:'compare',  icon:'5', title:'Srovnání profilů za celé období spolupráce',  sub:'Jan Řežáb vs Jan Sadil',                   person:false },
   { id:'top',      icon:'6', title:'TOP příspěvky',     sub:'Nejúspěšnější příspěvky podle dosahu',     person:false },
-  { id:'pipeline', icon:'7', title:'Stav obsahu',       sub:'Publikováno vs. rozpracováno',             person:false },
+  { id:'pipeline', icon:'7', title:'Stav obsahu',       sub:'Publikováno vs. rozpracováno',             person:false, year:false },
   { id:'profiles', icon:'8', title:'Profily ambasadorů', sub:'LinkedIn Analytics — data přímo z platformy', person:false },
   { id:'social',   icon:'9', title:'Sociální sítě 2026',  sub:'Facebook & Instagram — statistiky 2026',       person:false, year:false },
   { id:'ambs',     icon:'↔', title:'Komparace ambasadorů v roce 2026',  sub:'Jan Řežáb vs Jan Sadil — grafy vedle sebe',   person:false, year:false },
