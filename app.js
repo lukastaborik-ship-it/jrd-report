@@ -1009,7 +1009,23 @@ function renderSocial(){
       </div>
     </div>
 
-    <!-- 2. Facebook + Instagram organika vs. reklamy -->
+    <!-- 2. Meta souhrn investic -->
+    <div class="card section-gap">
+      <div class="card__head">
+        <div class="card__title">Meta — investice do reklam</div>
+        <div class="card__hint">Facebook + Instagram · H2 2025 vs. H1 2026</div>
+      </div>
+      <div class="soc-metrics">
+        <div class="soc-metric-row">
+          <span class="soc-metric-lbl">Investice do reklam (Meta)</span>
+          <span style="font-size:0.82em;color:var(--text-faint)">${fmt(fb.ad_spend_h2_2025)} Kč&thinsp;→&thinsp;</span>
+          <span class="soc-metric-val">${fmt(fb.ad_spend_h1_2026)} Kč</span>
+          ${pctBadge(fb.ad_spend_pct)}
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Facebook + Instagram organika vs. reklamy -->
     <div class="grid grid--2 section-gap">
       <div class="card">
         <div class="card__head">
@@ -1023,12 +1039,6 @@ function renderSocial(){
           ${metricRow('Diváci (dosah)',   fb.reach,         null)}
           ${metricRow('Interakce',        fb.interactions,  fb.interactions_pct)}
           <div style="border-top:1px solid var(--border-default);margin:10px 0 6px"></div>
-          <div class="soc-metric-row">
-            <span class="soc-metric-lbl">Investice do reklam</span>
-            <span style="font-size:0.82em;color:var(--text-faint)">${fmt(fb.ad_spend_h2_2025)} Kč&thinsp;→&thinsp;</span>
-            <span class="soc-metric-val">${fmt(fb.ad_spend_h1_2026)} Kč</span>
-            ${pctBadge(fb.ad_spend_pct)}
-          </div>
           <div class="soc-metric-row">
             <span class="soc-metric-lbl">Ø organický dosah / přísp.</span>
             <span style="font-size:0.82em;color:var(--text-faint)">${fmt(fb.avg_organic_reach_h2_2025)}&thinsp;→&thinsp;</span>
